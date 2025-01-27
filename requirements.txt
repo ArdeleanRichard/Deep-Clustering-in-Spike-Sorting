@@ -1,0 +1,10 @@
+numpy~=1.26.4
+matplotlib~=3.7.0
+seaborn~=0.13.2
+pandas
+scikit-learn
+scipy
+ucimlrepo
+torch
+clustpy
+torchvision
