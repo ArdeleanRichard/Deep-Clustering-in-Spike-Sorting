@@ -1,0 +1,2 @@
+n_clusters,embedding_size,batch_size,clustering_loss_weight,ssl_loss_weight,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,norm_davies_bouldin_score
+5,10,512,1.0,0.1,0.28527981420303344,0.457018850384784,0.7249853715623171,0.044728547793646295,423.4776729552239,2.9098047091702135,0.2557672503832633
