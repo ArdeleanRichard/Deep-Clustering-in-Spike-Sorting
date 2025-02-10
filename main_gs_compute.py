@@ -1,8 +1,10 @@
 import itertools
 import os
 
+import clustpy.deep.enrc
 import numpy as np
 import pandas as pd
+import torch
 from sklearn import preprocessing
 from sklearn.cluster import estimate_bandwidth
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
@@ -11,6 +13,12 @@ from sklearn.metrics.cluster import contingency_matrix
 from constants import DIR_RESULTS
 from gs_algos import load_algorithms
 from gs_datasets import load_all_data
+
+
+# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+print(torch.cuda.is_available())  # Should return True if GPU is available
+print(torch.cuda.device_count())  # Number of GPUs available
+# print(torch.cuda.get_device_name(0))  # GPU name
 
 
 def normalize_dbs(df):
@@ -28,11 +36,17 @@ def normalize_dbs(df):
 #     df = normalize_dbs(df)
 #     return df
 
-def perform_grid_search(datasets, algorithms, n_repeats=10):
+def perform_grid_search(datasets, algorithms, n_repeats=10, add=""):
     for dataset_name, (X, y_true) in datasets:
         # scale all datasets to the same range
+        test = np.copy(X)
         scaler = preprocessing.MinMaxScaler().fit(X)
         X = scaler.transform(X)
+        X = np.clip(X, 0, 1) # error, range given is [0.0, 1.0000000000000002] from floating point precision
+
+        # X = torch.tensor(X, dtype=torch.float32)
+        # X = torch.clamp(X, 0, 1)
+
 
         for algo_name, algo_details in algorithms.items():
             results = []
@@ -44,15 +58,17 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
             for param_name in param_names:
                 if param_name == "n_clusters":
                     algo_details["param_grid"]["n_clusters"] = [len(np.unique(y_true))]
+                    if algo_details["estimator"] is clustpy.deep.enrc.ENRC:
+                        algo_details["param_grid"]["n_clusters"] = [[len(np.unique(y_true)),len(np.unique(y_true)),len(np.unique(y_true))]]
                 if param_name == "input_dim":
                     algo_details["param_grid"]["input_dim"] = [X.shape[1]]
-                if param_name == "bandwidth":
-                    bandwidth = estimate_bandwidth(X, quantile=0.1, n_samples=50)
-                    algo_details["param_grid"]["bandwidth"].extend([bandwidth])
+                # if param_name == "initial_clustering_params":
+                #     algo_details["param_grid"]["initial_clustering_params"] = [{"n_clusters": [len(np.unique(y_true))]}]
             # -------------
 
 
             param_combinations = list(itertools.product(*algo_details["param_grid"].values()))
+            print(dataset_name, algo_name)
 
             for params in param_combinations:
                 param_dict = dict(zip(param_names, params))
@@ -66,16 +82,18 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                 for _ in range(n_repeats if is_nondeterministic else 1):
                     try:
                         estimator = algo_details["estimator"](**param_dict)
+                        print(param_dict)
                         y_pred = estimator.fit_predict(X)
+                        print(estimator.labels_.shape)
 
                         if len(np.unique(y_pred)) > 1:  # Ensure more than one cluster
                             ari = adjusted_rand_score(y_true, y_pred)
                             ami = adjusted_mutual_info_score(y_true, y_pred)
                             contingency_mat = contingency_matrix(y_true, y_pred)
                             purity = np.sum(np.amax(contingency_mat, axis=0)) / np.sum(contingency_mat)
-                            silhouette = silhouette_score(X, y_pred)
-                            calinski_harabasz = calinski_harabasz_score(X, y_pred)
-                            davies_bouldin = davies_bouldin_score(X, y_pred)
+                            silhouette = silhouette_score(test, y_pred)
+                            calinski_harabasz = calinski_harabasz_score(test, y_pred)
+                            davies_bouldin = davies_bouldin_score(test, y_pred)
                         else:
                             print(f"[1CLUST] {algo_name}, {params}")
                             ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
@@ -113,13 +131,18 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                     **aggregated_scores,
                 })
 
-            # Save results to CSV
-            results_df = pd.DataFrame(results)
-            results_df = normalize_dbs(results_df)
-            results_df.to_csv(DIR_RESULTS + f"/grid_search/{algo_name}_{dataset_name}.csv", index=False)
+                # Save results to CSV
+                results_df = pd.DataFrame(results)
+                results_df = normalize_dbs(results_df)
+                results_df.to_csv(DIR_RESULTS + f"./grid_search/{algo_name}_{dataset_name}{add}.csv", index=False)
 
 
 if __name__ == "__main__":
-    datasets = load_all_data()
-    algorithms = load_algorithms()
-    perform_grid_search(datasets, algorithms)
+    # datasets = load_all_data()
+    # algorithms = load_algorithms()
+    # perform_grid_search(datasets, algorithms)
+
+    for i in range(2):
+        datasets = load_all_data()
+        algorithms = load_algorithms()
+        perform_grid_search(datasets, algorithms, add=f"_{i}")
