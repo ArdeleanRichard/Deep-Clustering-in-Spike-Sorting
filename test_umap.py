@@ -12,6 +12,8 @@ simulation_number = 4
 X, y_true = ds.get_dataset_simulation(simNr=simulation_number)
 print(X.shape)
 
+# umap: 10, 0.05, chebyshev:  0.8545120329353522 0.881592432435879 0.9440218451336064 0.15016106087175415 816.7560286649613 2.0671410135682615
+
 scaler = preprocessing.MinMaxScaler().fit(X)
 X = scaler.transform(X)
 

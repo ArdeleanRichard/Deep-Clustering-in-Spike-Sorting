@@ -16,9 +16,6 @@ def load_algorithms():
     algorithms = {
 
 
-
-
-        #
         # # DEEP CLUSTERINGS:
         # "acedec": {
         #     "estimator": ACeDeC,
