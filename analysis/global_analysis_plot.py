@@ -82,15 +82,32 @@ def plot_box(title, data, METHODS, conditions):
     plt.show()
 
 
+def filter_columns_and_save(input_csv, columns):
+    df = pd.read_csv(input_csv)
 
+    df_filtered = df[columns]
 
+    base_name, ext = os.path.splitext(input_csv)
+    output_csv = f"{base_name}_simple{ext}"
 
+    df_filtered.to_csv(output_csv, index=False, header=False)
 
-pca =               np.loadtxt(f"./results/pca.csv", dtype=float, delimiter=",")
-ica =               np.loadtxt(f"./results/ica.csv", dtype=float, delimiter=",")
-isomap =            np.loadtxt(f"./results/isomap.csv", dtype=float, delimiter=",")
+    return df_filtered.to_numpy()
+
+columns = ["adjusted_rand_score","adjusted_mutual_info_score","purity_score","silhouette_score","calinski_harabasz_score","davies_bouldin_score"]
+
+pca =               filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns)
+ica =               filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns)
+isomap =            filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns)
+umap =            filter_columns_and_save(f"./results/umap_kmeans.csv", columns=columns)
 ae_normal =         np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
-vade =              np.loadtxt(f"./results/vade.csv", dtype=float, delimiter=",")
+vade =              filter_columns_and_save(f"./results/vade.csv", columns=columns)
+
+# pca =               np.loadtxt(f"./results/pca.csv", dtype=float, delimiter=",")
+# ica =               np.loadtxt(f"./results/ica.csv", dtype=float, delimiter=",")
+# isomap =            np.loadtxt(f"./results/isomap.csv", dtype=float, delimiter=",")
+# ae_normal =         np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
+# vade =              np.loadtxt(f"./results/vade.csv", dtype=float, delimiter=",")
 
 
 
@@ -99,7 +116,7 @@ vade =              np.loadtxt(f"./results/vade.csv", dtype=float, delimiter=","
 
 
 # T-TESTING
-METHODS = ['PCA', 'ICA', 'Isomap', 'AE', "VaDE"]
+METHODS = ['PCA', 'ICA', 'Isomap', 'UMAP','AE', "VaDE"]
 metric_names = ['ARI', 'AMI', 'Purity', 'DBS', 'CHS', 'SS']
 for metric_id, metric_name in enumerate(metric_names):
     data = []
@@ -107,6 +124,7 @@ for metric_id, metric_name in enumerate(metric_names):
     data.append(pca[:, metric_id].tolist())
     data.append(ica[:, metric_id].tolist())
     data.append(isomap[:, metric_id].tolist())
+    data.append(umap[:, metric_id].tolist())
     data.append(ae_normal[:, metric_id].tolist())
     data.append(vade[:, metric_id].tolist())
 

@@ -2,7 +2,7 @@ DATA_FOLDER_PATH = "../DATA/"
 REAL_DATA_FOLDER_PATH = DATA_FOLDER_PATH + f'/TINS/'
 SYNTHETIC_DATA_FOLDER_PATH = DATA_FOLDER_PATH + f'/SIMULATIONS/'
 DIR_RESULTS = "./results/"
-DIR_FIGURES = "./figs/"
+DIR_FIGURES = "./figures/"
 
 LABEL_COLOR_MAP = {-1: 'gray',
                    0: 'white',
