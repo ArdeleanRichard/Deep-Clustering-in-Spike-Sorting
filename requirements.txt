@@ -8,3 +8,4 @@ ucimlrepo
 torch
 clustpy
 torchvision
+umap-learn

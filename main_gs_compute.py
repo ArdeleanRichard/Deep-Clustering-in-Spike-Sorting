@@ -21,6 +21,29 @@ print(torch.cuda.device_count())  # Number of GPUs available
 # print(torch.cuda.get_device_name(0))  # GPU name
 
 
+
+# acedec uniform {'lr': 0.001},{'lr': 1e-05}
+# aec uniform {'lr': 0.01},{'lr': 0.0001} *
+# dcn uniform {'lr': 0.01},{'lr': 0.001} *
+# ddc uniform 0.15,{'lr': 0.01}  -  0.15 {'lr': 0.001}
+# dec normal {'lr': 0.01},{'lr': 0.001}    \/ {'lr': 0.001},{'lr': 1e-05}
+# deepect both {'lr': 0.01},{'lr': 0.001} / not 1
+# dipdeck uniform {'lr': 0.01},{'lr': 1e-05} - needs rerun n_clusters
+# dipencoder normal {'lr': 0.001},{'lr': 0.0001} *
+# dkm normal {'lr': 0.01},{'lr': 0.0001} weak
+# idec uniform {'lr': 0.001},{'lr': 0.01} / {'lr': 0.001},{'lr': 0.0001}
+# n2d uniform {'lr': 0.001} *
+#
+#
+# acedec {'lr': 0.01},{'lr': 0.0001} / {'lr': 0.001},{'lr': 0.001} / {'lr': 0.01},{'lr': 0.001}
+#
+#
+# umap: 10, 0.05, chebyshev:  0.8545120329353522 0.881592432435879 0.9440218451336064 0.15016106087175415 816.7560286649613 2.0671410135682615
+
+
+
+
+
 def normalize_dbs(df):
     # df['davies_bouldin_score'] = 1 - df['davies_bouldin_score'] / df['davies_bouldin_score'].max() # doesnt work as well as I would like
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
@@ -56,7 +79,7 @@ def perform_grid_search(datasets, algorithms, n_repeats=10, add=""):
             # SPECIAL PARAMS
             # -------------
             for param_name in param_names:
-                if param_name == "n_clusters":
+                if param_name == "n_clusters" or param_name == "n_clusters_init":
                     algo_details["param_grid"]["n_clusters"] = [len(np.unique(y_true))]
                     if algo_details["estimator"] is clustpy.deep.enrc.ENRC:
                         algo_details["param_grid"]["n_clusters"] = [[len(np.unique(y_true)),len(np.unique(y_true)),len(np.unique(y_true))]]
@@ -142,7 +165,7 @@ if __name__ == "__main__":
     # algorithms = load_algorithms()
     # perform_grid_search(datasets, algorithms)
 
-    for i in range(2):
+    for i in range(1):
         datasets = load_all_data()
         algorithms = load_algorithms()
         perform_grid_search(datasets, algorithms, add=f"_{i}")
