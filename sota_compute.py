@@ -22,7 +22,6 @@ print(torch.cuda.device_count())  # Number of GPUs available
 
 def load_algorithms_fe():
     algorithms = {
-
         # "pca": {
         #     "estimator": PCA,
         #     "param_grid": {
