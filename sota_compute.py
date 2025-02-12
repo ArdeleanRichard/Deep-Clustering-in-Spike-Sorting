@@ -10,7 +10,8 @@ from sklearn.manifold import Isomap
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
 from umap import UMAP
-
+import matplotlib
+matplotlib.use('Agg')
 from constants import DIR_RESULTS, DIR_FIGURES
 from gs_datasets import load_all_data
 from visualization import scatter_plot
@@ -22,7 +23,6 @@ print(torch.cuda.device_count())  # Number of GPUs available
 
 def load_algorithms_fe():
     algorithms = {
-
         # "pca": {
         #     "estimator": PCA,
         #     "param_grid": {
@@ -38,26 +38,27 @@ def load_algorithms_fe():
         #         "tol": 1e-3,
         #     },
         # },
-        # "isomap": {
-        #     "estimator": Isomap,
-        #     "param_grid": {
-        #         "n_neighbors": 100,
-        #         "n_components": 2,
-        #         "eigen_solver": "arpack",
-        #         "path_method": "D",
-        #         "n_jobs": -1,
-        #     },
-        # },
-        "umap": {
-            "estimator": UMAP,
+        "isomap": {
+            "estimator": Isomap,
             "param_grid": {
-                "n_neighbors": 10,
-                "min_dist": 0.05,
-                "metric": "chebyshev",
-                "n_epochs": 500,
-                "n_jobs": 1,
+                "n_neighbors": 20,
+                "n_components": 2,
+                "eigen_solver": "arpack",
+                "path_method": "D",
+                "n_jobs": -1,
             },
         },
+        # "umap": {
+        #     "estimator": UMAP,
+        #     "param_grid": {
+        #         "n_neighbors": 10,
+        #         "min_dist": 0.05,
+        #         "metric": "chebyshev",
+        #         "n_epochs": 500,
+        #         "n_components": 2,
+        #         "n_jobs": 1,
+        #     },
+        # },
 
     }
 
@@ -102,6 +103,7 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                 fe_param_names = list(fe_details["param_grid"].keys())
                 clust_param_names = list(clust_details["param_grid"].keys())
 
+
                 # Special parameter handling
                 for param_name in clust_param_names:
                     if param_name == "n_clusters" or param_name == "n_clusters_init":
@@ -118,6 +120,7 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                 try:
                     transformer = fe_details["estimator"](**fe_params)
                     X_transformed = transformer.fit_transform(X)
+                    np.savetxt(DIR_RESULTS + f"spaces/{fe_name}/{dataset_name}.csv", X_transformed, delimiter=",")
 
                     estimator = clust_details["estimator"](**clust_params)
                     y_pred = estimator.fit_predict(X_transformed)
@@ -146,6 +149,11 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                     scatter_plot.plot(f'{fe_name} + {clust_name} on {dataset_name}', X_transformed, y_pred, marker='o')
                     plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{fe_name}_{clust_name}.svg')
                     plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{fe_name}_{clust_name}.png')
+                    plt.close()
+
+                    scatter_plot.plot(f'{fe_name} with GT on {dataset_name}', X_transformed, y_true, marker='o')
+                    plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{fe_name}_gt.svg')
+                    plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{fe_name}_gt.png')
                     plt.close()
 
                 except Exception as e:
