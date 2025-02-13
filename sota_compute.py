@@ -41,7 +41,7 @@ def load_algorithms_fe():
         "isomap": {
             "estimator": Isomap,
             "param_grid": {
-                "n_neighbors": 20,
+                "n_neighbors": 25,
                 "n_components": 2,
                 "eigen_solver": "arpack",
                 "path_method": "D",
