@@ -99,7 +99,6 @@ columns = ["adjusted_rand_score","adjusted_mutual_info_score","purity_score","si
 pca =               filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns)
 ica =               filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns)
 isomap =            filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns)
-umap =            filter_columns_and_save(f"./results/umap_kmeans.csv", columns=columns)
 ae_normal =         np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
 vade =              filter_columns_and_save(f"./results/vade.csv", columns=columns)
 
@@ -116,7 +115,7 @@ vade =              filter_columns_and_save(f"./results/vade.csv", columns=colum
 
 
 # T-TESTING
-METHODS = ['PCA', 'ICA', 'Isomap', 'UMAP','AE', "VaDE"]
+METHODS = ['PCA', 'ICA', 'Isomap','AE', "VaDE"]
 metric_names = ['ARI', 'AMI', 'Purity', 'DBS', 'CHS', 'SS']
 for metric_id, metric_name in enumerate(metric_names):
     data = []
@@ -124,7 +123,6 @@ for metric_id, metric_name in enumerate(metric_names):
     data.append(pca[:, metric_id].tolist())
     data.append(ica[:, metric_id].tolist())
     data.append(isomap[:, metric_id].tolist())
-    data.append(umap[:, metric_id].tolist())
     data.append(ae_normal[:, metric_id].tolist())
     data.append(vade[:, metric_id].tolist())
 

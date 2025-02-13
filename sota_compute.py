@@ -48,18 +48,6 @@ def load_algorithms_fe():
                 "n_jobs": -1,
             },
         },
-        # "umap": {
-        #     "estimator": UMAP,
-        #     "param_grid": {
-        #         "n_neighbors": 10,
-        #         "min_dist": 0.05,
-        #         "metric": "chebyshev",
-        #         "n_epochs": 500,
-        #         "n_components": 2,
-        #         "n_jobs": 1,
-        #     },
-        # },
-
     }
 
     return algorithms
