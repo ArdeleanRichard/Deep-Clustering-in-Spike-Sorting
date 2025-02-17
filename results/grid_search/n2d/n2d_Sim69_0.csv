@@ -1,0 +1,2 @@
+n_clusters,embedding_size,pretrain_optimizer_params,random_state,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,norm_davies_bouldin_score
+16,10,{'lr': 0.001},42,0.6151336604921233,0.8300778293007052,0.8862335075927309,0.1808987470883841,4158.732672334879,2.5742384327153256,0.27977988005694027

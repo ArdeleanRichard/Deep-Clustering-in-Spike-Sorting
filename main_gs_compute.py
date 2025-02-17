@@ -23,22 +23,23 @@ print(torch.cuda.device_count())  # Number of GPUs available
 
 
 # acedec uniform {'lr': 0.001},{'lr': 1e-05}
-# aec uniform {'lr': 0.01},{'lr': 0.0001} *
-# dcn uniform {'lr': 0.01},{'lr': 0.001} *
+# acedec {'lr': 0.01},{'lr': 0.0001} / {'lr': 0.001},{'lr': 0.001} / {'lr': 0.01},{'lr': 0.001}
 # ddc uniform 0.15,{'lr': 0.01}  -  0.15 {'lr': 0.001}
 # dec normal {'lr': 0.01},{'lr': 0.001}    \/ {'lr': 0.001},{'lr': 1e-05}
 # deepect both {'lr': 0.01},{'lr': 0.001} / not 1
 # dipdeck uniform {'lr': 0.01},{'lr': 1e-05} - needs rerun n_clusters
-# dipencoder normal {'lr': 0.001},{'lr': 0.0001} *
 # dkm normal {'lr': 0.01},{'lr': 0.0001} weak
 # idec uniform {'lr': 0.001},{'lr': 0.01} / {'lr': 0.001},{'lr': 0.0001}
+#
+#
+#
 # n2d uniform {'lr': 0.001} *
 #
 #
-# acedec {'lr': 0.01},{'lr': 0.0001} / {'lr': 0.001},{'lr': 0.001} / {'lr': 0.01},{'lr': 0.001}
 #
-#
-
+# aec uniform {'lr': 0.01},{'lr': 0.0001} *
+# dcn uniform {'lr': 0.01},{'lr': 0.001} *
+# dipencoder normal {'lr': 0.001},{'lr': 0.0001} *
 
 
 

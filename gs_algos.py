@@ -85,7 +85,7 @@ def load_algorithms():
         #         "random_state": [42]
         #     },
         # },
-        #
+
         # "dipdeck": {
         #     "estimator": DipDECK,
         #     "param_grid": {
@@ -97,18 +97,18 @@ def load_algorithms():
         #         "random_state": [42]
         #     },
         # },
-        "dipencoder": {
-            "estimator": DipEncoder,
-            "param_grid": {
-                "n_clusters": [2],
-                "embedding_size": [10],
-                "pretrain_optimizer_params": [{"lr": 1e-3}],
-                "clustering_optimizer_params": [{"lr": 1e-4}],
-                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [42]
-            },
-        },
+        # "dipencoder": {
+        #     "estimator": DipEncoder,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #         "embedding_size": [10],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         "clustering_optimizer_params": [{"lr": 1e-4}],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [42]
+        #     },
+        # },
         # "dkm": {
         #     "estimator": DKM,
         #     "param_grid": {
@@ -134,7 +134,7 @@ def load_algorithms():
         #     "param_grid": {
         #         "n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3},],
         #         "random_state": [42]
         #     },
         # },
