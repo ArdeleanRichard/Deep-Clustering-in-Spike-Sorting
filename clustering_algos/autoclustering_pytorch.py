@@ -9,7 +9,6 @@ from sklearn.datasets import load_iris
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 class AutoClustering(nn.Module):
     def __init__(self, input_dim, n_clusters, alpha_final=500.0, gamma=4.0):
         super(AutoClustering, self).__init__()
@@ -38,6 +37,10 @@ class AutoClustering(nn.Module):
             nn.Tanh(),
             nn.Linear(20, input_dim)
         )
+
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(self.device)
+        self.to(self.device)
 
     def quasi_max(self, logits, alpha):
         scaled_logits = alpha * logits
@@ -69,10 +72,10 @@ class AutoClustering(nn.Module):
             epoch_loss = 0.0
 
             for batch in dataset:
-                batch = batch[0]
+                curr_batch = batch[0].to(self.device)
                 optimizer.zero_grad()
-                clusters, exemplars = self.forward(batch, alpha)
-                loss = self.loss_function(batch, exemplars)
+                clusters, exemplars = self.forward(curr_batch, alpha)
+                loss = self.loss_function(curr_batch, exemplars)
                 loss.backward()
                 optimizer.step()
                 epoch_loss += loss.item()
@@ -80,8 +83,9 @@ class AutoClustering(nn.Module):
             print(f"Epoch {epoch + 1}/{max_epochs}, Loss: {epoch_loss:.4f}, Alpha: {alpha:.2f}")
 
         with torch.no_grad():
-            final_clusters, _ = self.forward(torch.tensor(X, dtype=torch.float32), self.alpha_final)
-            predicted_labels = torch.argmax(final_clusters, dim=1).numpy()
+            inputs = torch.tensor(X, dtype=torch.float32).to(self.device)
+            final_clusters, _ = self.forward(inputs, self.alpha_final)
+            predicted_labels = torch.argmax(final_clusters, dim=1).cpu().numpy()
 
         return predicted_labels
 
@@ -122,6 +126,6 @@ if __name__ == "__main__":
 
     print(X.shape)
 
-    model = AutoClustering(X.shape[1], 3)
+    model = AutoClustering(X.shape[1], 3).to(device)
     predicted_labels = model.fit_predict(X)
     model.plot(X, ground_truth)

@@ -176,14 +176,13 @@ def load_algorithms():
         # },
 
 
-        # "autoclustering": {
-        #     "estimator": AutoClustering,
-        #     "param_grid": {
-        #         "n_clusters": [2],
-        #         "input_dim": [1],
-        #         "init": ["random"]
-        #     },
-        # },
+        "autoclustering": {
+            "estimator": AutoClustering,
+            "param_grid": {
+                "n_clusters": [2],
+                "input_dim": [1]
+            },
+        },
 
 
 
