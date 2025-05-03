@@ -96,12 +96,12 @@ def filter_columns_and_save(input_csv, columns):
     return df_filtered.to_numpy()
 
 
-def compute_ttest(data):
-    ttest_matrix = np.zeros((len(METHODS), len(METHODS)), dtype=float)
-    labels = np.zeros((len(METHODS), len(METHODS)), dtype=object)
-    for m1_id, m1 in enumerate(METHODS):
-        for m2_id, m2 in enumerate(METHODS):
-            result = stats.ttest_ind(data[m1_id], data[m2_id], equal_var=True)[1] * (len(METHODS) * (len(METHODS) - 1) / 2)
+def compute_ttest(data, method_names):
+    ttest_matrix = np.zeros((len(method_names), len(method_names)), dtype=float)
+    labels = np.zeros((len(method_names), len(method_names)), dtype=object)
+    for m1_id, m1 in enumerate(method_names):
+        for m2_id, m2 in enumerate(method_names):
+            result = stats.ttest_ind(data[m1_id], data[m2_id], equal_var=True)[1] * (len(method_names) * (len(method_names) - 1) / 2)
             if result > 0.05:
                 ttest_matrix[m1_id][m2_id] = -1
                 labels[m1_id][m2_id] = ""
@@ -115,8 +115,8 @@ def compute_ttest(data):
     return ttest_matrix, labels
 
 
-def plot_ttest_matrix(metric_name, ttest_matrix, labels):
-    df_cm = pd.DataFrame(ttest_matrix, index=METHODS, columns=METHODS)
+def plot_ttest_matrix(metric_name, method_names, ttest_matrix, labels):
+    df_cm = pd.DataFrame(ttest_matrix, index=method_names, columns=method_names)
     plt.figure(figsize=(11, 11))
     pallete = sn.color_palette("magma", as_cmap=True)
     sn.heatmap(df_cm, annot=False, fmt="", cmap=pallete)
@@ -125,52 +125,40 @@ def plot_ttest_matrix(metric_name, ttest_matrix, labels):
     plt.close()
 
 
-def main():
+def main(methods_dict):
     for metric_id, metric_name in enumerate(metric_names):
         data = []
-
-        data.append(pca[:, metric_id].tolist())
-        data.append(ica[:, metric_id].tolist())
-        data.append(isomap[:, metric_id].tolist())
-        data.append(ae_normal[:, metric_id].tolist())
-        data.append(aec[:, metric_id].tolist())
-        data.append(dcn[:, metric_id].tolist())
-        data.append(ddc[:, metric_id].tolist())
-        data.append(deepect[:, metric_id].tolist())
-        data.append(dipdeck[:, metric_id].tolist())
-        data.append(idec[:, metric_id].tolist())
-        data.append(n2d[:, metric_id].tolist())
-        data.append(vade[:, metric_id].tolist())
-
+        method_names = list(methods_dict.keys())
+        for method_name in method_names:
+            method_data = methods_dict[method_name]
+            data.append(method_data[:, metric_id].tolist())
 
         # np.savetxt(f"./figures/global/ttest_{metric_name}.csv", np.array(ttest_matrix), delimiter=",")
 
         # T-TESTING
-        ttest_matrix, labels = compute_ttest(data)
-        plot_ttest_matrix(metric_name, ttest_matrix, labels)
+        ttest_matrix, labels = compute_ttest(data, method_names)
+        plot_ttest_matrix(metric_name, method_names, ttest_matrix, labels)
 
-        plot_box(metric_name, data, METHODS, [metric_name])
-
+        plot_box(metric_name, data, method_names, [metric_name])
 
 
 
 
 
 if __name__ == "__main__":
-    columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]
 
-    pca = filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns)
-    ica = filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns)
-    isomap = filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns)
-    ae_normal = np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
-    aec = filter_columns_and_save(f"./results/aec.csv", columns=columns)
-    dcn = filter_columns_and_save(f"./results/dcn.csv", columns=columns)
-    ddc = filter_columns_and_save(f"./results/ddc.csv", columns=columns)
-    deepect = filter_columns_and_save(f"./results/deepect.csv", columns=columns)
-    dipdeck = filter_columns_and_save(f"./results/dipdeck.csv", columns=columns)
-    idec = filter_columns_and_save(f"./results/idec.csv", columns=columns)
-    n2d = filter_columns_and_save(f"./results/n2d.csv", columns=columns)
-    vade = filter_columns_and_save(f"./results/vade.csv", columns=columns)
+    # pca = filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns)
+    # ica = filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns)
+    # isomap = filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns)
+    # ae_normal = np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
+    # aec = filter_columns_and_save(f"./results/aec.csv", columns=columns)
+    # dcn = filter_columns_and_save(f"./results/dcn.csv", columns=columns)
+    # ddc = filter_columns_and_save(f"./results/ddc.csv", columns=columns)
+    # deepect = filter_columns_and_save(f"./results/deepect.csv", columns=columns)
+    # dipdeck = filter_columns_and_save(f"./results/dipdeck.csv", columns=columns)
+    # idec = filter_columns_and_save(f"./results/idec.csv", columns=columns)
+    # n2d = filter_columns_and_save(f"./results/n2d.csv", columns=columns)
+    # vade = filter_columns_and_save(f"./results/vade.csv", columns=columns)
 
     # pca =               np.loadtxt(f"./results/pca.csv", dtype=float, delimiter=",")
     # ica =               np.loadtxt(f"./results/ica.csv", dtype=float, delimiter=",")
@@ -178,8 +166,24 @@ if __name__ == "__main__":
     # ae_normal =         np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
     # vade =              np.loadtxt(f"./results/vade.csv", dtype=float, delimiter=",")
 
-    # T-TESTING
-    METHODS = ['PCA', 'ICA', 'Isomap', 'AE', "AEC", "DCN", "DDC", "DeepECT", "DipDECK", "IDEC", "N2D", "VaDE"]
+
+    columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]
     metric_names = ['ARI', 'AMI', 'Purity', 'SS', 'CHS', 'DBS']
 
-    main()
+
+    methods_dict = {
+        'PCA':          filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns),
+        'ICA':          filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns),
+        'Isomap':       filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns),
+        'AE':           np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=","),
+        "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
+        "DCN":          filter_columns_and_save(f"./results/dcn.csv", columns=columns),
+        "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
+        "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
+        "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
+        "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
+        "N2D":          filter_columns_and_save(f"./results/n2d.csv", columns=columns),
+        "VaDE":         filter_columns_and_save(f"./results/vade.csv", columns=columns),
+    }
+
+    main(methods_dict)
