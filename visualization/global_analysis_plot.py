@@ -9,10 +9,12 @@ from scipy import stats
 from constants import LABEL_COLOR_MAP_SMALLER
 import seaborn as sn
 
+from visualization.global_analysis_utils import filter_columns_and_save
+
 os.chdir("../")
 
-def plot_box(title, data, METHODS, conditions):
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+def plot_box(title, data, method_names, conditions):
+    fig, ax1 = plt.subplots(figsize=(10, 6), dpi=600)
     # fig.canvas.manager.set_window_title('A Boxplot Example')
     fig.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
 
@@ -57,7 +59,7 @@ def plot_box(title, data, METHODS, conditions):
         med = bp['medians'][i]
 
         # Alternate among colors
-        ax1.add_patch(Polygon(box_coords, facecolor=LABEL_COLOR_MAP_SMALLER[i % len(METHODS)]))
+        ax1.add_patch(Polygon(box_coords, facecolor=LABEL_COLOR_MAP_SMALLER[i % len(method_names)]))
 
         ax1.plot(np.average(med.get_xdata()), np.average(data[i]), color='w', marker='*', markeredgecolor='k')
 
@@ -66,7 +68,7 @@ def plot_box(title, data, METHODS, conditions):
     # top = 1.1
     # bottom = 0
     # ax1.set_ylim(bottom, top)
-    ax1.set_xticklabels(np.repeat(METHODS, len(conditions)), rotation=0, fontsize=8)
+    ax1.set_xticklabels(np.repeat(method_names, len(conditions)), rotation=0, fontsize=8)
 
     # Due to the Y-axis scale being different across samples, it can be
     # hard to compare differences in medians across the samples. Add upper
@@ -83,17 +85,6 @@ def plot_box(title, data, METHODS, conditions):
     plt.close()
 
 
-def filter_columns_and_save(input_csv, columns):
-    df = pd.read_csv(input_csv)
-
-    df_filtered = df[columns]
-
-    base_name, ext = os.path.splitext(input_csv)
-    output_csv = f"{base_name}_simple{ext}"
-
-    df_filtered.to_csv(output_csv, index=False, header=False)
-
-    return df_filtered.to_numpy()
 
 
 def compute_ttest(data, method_names):
@@ -117,11 +108,12 @@ def compute_ttest(data, method_names):
 
 def plot_ttest_matrix(metric_name, method_names, ttest_matrix, labels):
     df_cm = pd.DataFrame(ttest_matrix, index=method_names, columns=method_names)
-    plt.figure(figsize=(11, 11))
+    plt.figure(figsize=(11, 11), dpi=600)
     pallete = sn.color_palette("magma", as_cmap=True)
     sn.heatmap(df_cm, annot=False, fmt="", cmap=pallete)
     sn.heatmap(df_cm, annot=labels, annot_kws={'va': 'top', 'size': 14}, fmt="s", cbar=False, cmap=pallete, linewidths=5e-3, linecolor='gray')
     plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.svg')
+    plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.png')
     plt.close()
 
 
@@ -146,27 +138,6 @@ def main(methods_dict):
 
 
 if __name__ == "__main__":
-
-    # pca = filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns)
-    # ica = filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns)
-    # isomap = filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns)
-    # ae_normal = np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
-    # aec = filter_columns_and_save(f"./results/aec.csv", columns=columns)
-    # dcn = filter_columns_and_save(f"./results/dcn.csv", columns=columns)
-    # ddc = filter_columns_and_save(f"./results/ddc.csv", columns=columns)
-    # deepect = filter_columns_and_save(f"./results/deepect.csv", columns=columns)
-    # dipdeck = filter_columns_and_save(f"./results/dipdeck.csv", columns=columns)
-    # idec = filter_columns_and_save(f"./results/idec.csv", columns=columns)
-    # n2d = filter_columns_and_save(f"./results/n2d.csv", columns=columns)
-    # vade = filter_columns_and_save(f"./results/vade.csv", columns=columns)
-
-    # pca =               np.loadtxt(f"./results/pca.csv", dtype=float, delimiter=",")
-    # ica =               np.loadtxt(f"./results/ica.csv", dtype=float, delimiter=",")
-    # isomap =            np.loadtxt(f"./results/isomap.csv", dtype=float, delimiter=",")
-    # ae_normal =         np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=",")
-    # vade =              np.loadtxt(f"./results/vade.csv", dtype=float, delimiter=",")
-
-
     columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]
     metric_names = ['ARI', 'AMI', 'Purity', 'SS', 'CHS', 'DBS']
 
@@ -175,13 +146,13 @@ if __name__ == "__main__":
         'PCA':          filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns),
         'ICA':          filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns),
         'Isomap':       filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns),
-        'AE':           np.loadtxt(f"./results/ae_normal.csv", dtype=float, delimiter=","),
-        "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
+        'AE':           filter_columns_and_save(f"./results/ae_kmeans.csv", columns=columns),
+        # "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
         "DCN":          filter_columns_and_save(f"./results/dcn.csv", columns=columns),
-        "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
-        "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
-        "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
-        "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
+        # "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
+        # "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
+        # "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
+        # "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
         "N2D":          filter_columns_and_save(f"./results/n2d.csv", columns=columns),
         "VaDE":         filter_columns_and_save(f"./results/vade.csv", columns=columns),
     }

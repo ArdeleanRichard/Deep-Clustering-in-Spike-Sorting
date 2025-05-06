@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/figures" />
       <excludeFolder url="file://$MODULE_DIR$/results" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (Deep-Clustering-in-Spike-Sorting)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

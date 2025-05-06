@@ -14,6 +14,9 @@ from constants import DIR_RESULTS
 from gs_algos import load_algorithms
 from gs_datasets import load_all_data
 
+seed=42
+torch.manual_seed(seed)
+np.random.seed(seed)
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 print(torch.cuda.is_available())  # Should return True if GPU is available
