@@ -18,7 +18,7 @@ seed=42
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-# os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.device_count())  # Number of GPUs available
 # print(torch.cuda.get_device_name(0))  # GPU name
