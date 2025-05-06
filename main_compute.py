@@ -15,6 +15,12 @@ print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.device_count())  # Number of GPUs available
 
 
+seed=42
+torch.manual_seed(seed)
+np.random.seed(seed)
+
+
+
 def normalize_dbs(df):
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
     return df
@@ -67,24 +73,24 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                             ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
 
                         scores_per_repeat.append({
+                            "dataset": dataset_name, # Track dataset in results
                             "adjusted_rand_score": ari,
                             "adjusted_mutual_info_score": ami,
                             "purity_score": purity,
                             "silhouette_score": silhouette,
                             "calinski_harabasz_score": calinski_harabasz,
                             "davies_bouldin_score": davies_bouldin,
-                            "dataset": dataset_name  # Track dataset in results
                         })
                     except Exception as e:
                         print(f"[ERROR] {algo_name}, {params}, {e}")
                         scores_per_repeat.append({
+                            "dataset": dataset_name,
                             "adjusted_rand_score": -1,
                             "adjusted_mutual_info_score": -1,
                             "purity_score": -1,
                             "silhouette_score": -1,
                             "calinski_harabasz_score": -1,
                             "davies_bouldin_score": -1,
-                            "dataset": dataset_name
                         })
 
                 if is_nondeterministic:
