@@ -11,8 +11,6 @@ def load_algorithms():
     dropout = 0.5
     random_state = 42
     batch_norm = True
-    # neural_network = FeedforwardAutoencoder(layers=layers) #, dropout=dropout, batch_norm=batch_norm, random_state=random_state)
-
     algorithms = {
 
 
@@ -65,16 +63,20 @@ def load_algorithms():
         #         "random_state": [42]
         #     },
         # },
-        # "dec": {
-        #     "estimator": DEC,
-        #     "param_grid": {
-        #         "n_clusters": [2],
-        #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
-        #     },
-        # },
+        "dec": {
+            "estimator": DEC,
+            "param_grid": {
+                "n_clusters": [2],
+                "embedding_size": [10],
+                "alpha": [0.25],
+                "pretrain_optimizer_params": [{"lr": 1e-3}],
+                "clustering_optimizer_params": [{"lr": 1e-4}],
+                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+                # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+                # "alpha": [0.5, 0.75, 1.0, 1.5],
+                "random_state": [42],
+            },
+        },
         # "deepect": {
         #     "estimator": DeepECT,
         #     "param_grid": {
@@ -114,9 +116,11 @@ def load_algorithms():
         #     "param_grid": {
         #         "n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         "clustering_optimizer_params": [{"lr": 1e-5}],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [42],
         #     },
         # },
         # "idec": {
@@ -134,46 +138,51 @@ def load_algorithms():
         #     "param_grid": {
         #         "n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-3},],
-        #         "random_state": [42]
+        #         "batch_size": [256],
+        #         "pretrain_epochs": [100],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}],
+        #         "manifold_params": [{"n_components":2, "perplexity": 35, "random_state":42},],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4},],
+        #         # "manifold_params": [{"perplexity": 15}, {"perplexity": 25}, {"perplexity": 35}, {"perplexity": 50}],
+        #         "random_state": [42],
         #     },
         # },
-        "vade": {
-            "estimator": VaDE,
-            "param_grid": {
-                "n_clusters": [2],
-
-                "embedding_size": [10],
-                # "neural_network": [(FeedforwardAutoencoder, {"layers": [79, 100, 100, 100, 50], "dropout": 0.5, "batch_norm": True})], # error error no sense
-                "pretrain_optimizer_params":    [{"lr": 1e-2}],
-                "clustering_optimizer_params":  [{"lr": 1e-3}],
-                # "batch_size": [256],
-                # "pretrain_epochs": [10],
-                # "clustering_epochs": [150],
-
-                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}],
-                # "clustering_optimizer_params": [{"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                # "batch_size": [256, 32, 64, 128, 512],
-                # "pretrain_epochs": [10, 50, 100],
-                # "clustering_epochs": [150, 300],
-                "random_state": [42],
-
-                # "initial_clustering_class": [KMeans],
-                # "initial_clustering_params": [{}],
-
-                # "neural_network": [neural_network],
-                # "embedding_size": [10, 20, 30, 40, 50, 60, 70],
-
-                # "embedding_size": [10],
-                # "clustering_loss_weight": [1.0],
-                # "ssl_loss_weight": [0.1],
-
-                # "embedding_size": [10],
-                # "batch_size": [1024],
-                # "clustering_loss_weight": [0.1],
-                # "ssl_loss_weight": [1.0],
-            },
-        },
+        # "vade": {
+        #     "estimator": VaDE,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #
+        #         "embedding_size": [10],
+        #         # "neural_network": [(FeedforwardAutoencoder, {"layers": [79, 100, 100, 100, 50], "dropout": 0.5, "batch_norm": True})], # error error no sense
+        #         "pretrain_optimizer_params":    [{"lr": 1e-2}],
+        #         "clustering_optimizer_params":  [{"lr": 1e-3}],
+        #         # "batch_size": [256],
+        #         # "pretrain_epochs": [10],
+        #         # "clustering_epochs": [150],
+        #
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "batch_size": [256, 32, 64, 128, 512],
+        #         # "pretrain_epochs": [10, 50, 100],
+        #         # "clustering_epochs": [150, 300],
+        #         "random_state": [42],
+        #
+        #         # "initial_clustering_class": [KMeans],
+        #         # "initial_clustering_params": [{}],
+        #
+        #         # "neural_network": [neural_network],
+        #         # "embedding_size": [10, 20, 30, 40, 50, 60, 70],
+        #
+        #         # "embedding_size": [10],
+        #         # "clustering_loss_weight": [1.0],
+        #         # "ssl_loss_weight": [0.1],
+        #
+        #         # "embedding_size": [10],
+        #         # "batch_size": [1024],
+        #         # "clustering_loss_weight": [0.1],
+        #         # "ssl_loss_weight": [1.0],
+        #     },
+        # },
 
 
         # "autoclustering": {
@@ -199,5 +208,7 @@ def load_algorithms():
         # },
 
     }
+    # neural_network = FeedforwardAutoencoder(layers=layers) #, dropout=dropout, batch_norm=batch_norm, random_state=random_state)
+
     return algorithms
 
