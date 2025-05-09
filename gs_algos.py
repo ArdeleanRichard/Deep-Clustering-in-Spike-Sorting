@@ -4,12 +4,17 @@ from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, SpectralClu
 from sklearn.mixture import GaussianMixture
 
 from clustering_algos.autoclustering_pytorch import AutoClustering
+import numpy as np
+import torch
+
+random_state=42
+torch.manual_seed(random_state)
+np.random.seed(random_state)
 
 
 def load_algorithms():
     layers = [79, 100, 100, 100, 10]
     dropout = 0.5
-    random_state = 42
     batch_norm = True
     algorithms = {
 
@@ -54,29 +59,32 @@ def load_algorithms():
         #         "random_state": [42]
         #     },
         # },
-        # "ddc": {
-        #     "estimator": DDC,
-        #     "param_grid": {
-        #         "ratio": [0.15, 0.2, 0.25, 0.3, 0.5], #[0.01, 0.05, 0.1, 0.2],
-        #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
-        #     },
-        # },
-        "dec": {
-            "estimator": DEC,
+        "ddc": {
+            "estimator": DDC,
             "param_grid": {
-                "n_clusters": [2],
                 "embedding_size": [10],
-                "alpha": [0.25],
+                "ratio": [0.1], #[0.01, 0.05, 0.1, 0.2],
                 "pretrain_optimizer_params": [{"lr": 1e-3}],
-                "clustering_optimizer_params": [{"lr": 1e-4}],
+                # "ratio": [0.01, 0.05, 0.1, 0.2, 0.15], #[0.01, 0.05, 0.1, 0.2],
                 # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                # "alpha": [0.5, 0.75, 1.0, 1.5],
-                "random_state": [42],
+                "random_state": [42]
             },
         },
+        # "dec": {
+        #     "estimator": DEC,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #         "embedding_size": [10],
+        #         "alpha": [0.25],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         "clustering_optimizer_params": [{"lr": 1e-4}],
+        #         "initial_clustering_params": [{"init": 'k-means++'}],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "alpha": [0.5, 0.75, 1.0, 1.5],
+        #         "random_state": [random_state],
+        #     },
+        # },
         # "deepect": {
         #     "estimator": DeepECT,
         #     "param_grid": {
