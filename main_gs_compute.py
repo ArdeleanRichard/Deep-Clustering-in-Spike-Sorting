@@ -14,16 +14,6 @@ from constants import DIR_RESULTS
 from gs_algos import load_algorithms
 from gs_datasets import load_all_data
 
-seed=42
-torch.manual_seed(seed)
-np.random.seed(seed)
-
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-print(torch.cuda.is_available())  # Should return True if GPU is available
-print(torch.cuda.device_count())  # Number of GPUs available
-# print(torch.cuda.get_device_name(0))  # GPU name
-
-
 
 # acedec uniform {'lr': 0.001},{'lr': 1e-05}
 # acedec {'lr': 0.01},{'lr': 0.0001} / {'lr': 0.001},{'lr': 0.001} / {'lr': 0.01},{'lr': 0.001}
@@ -52,19 +42,9 @@ def normalize_dbs(df):
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
     return df
 
-# def normalize_chs(df):
-#     df['calinski_harabasz_score'] = np.log1p(df['calinski_harabasz_score'])
-#     df['calinski_harabasz_score'] = df['calinski_harabasz_score'] / df['calinski_harabasz_score'].max()
-#     return df
-
-# def normalize_dbs_chs(df):
-#     df = normalize_chs(df)
-#     df = normalize_dbs(df)
-#     return df
-
 def perform_grid_search(datasets, algorithms, n_repeats=10, add=""):
     for dataset_name, (X, y_true) in datasets:
-        # scale all datasets to the same range
+
         test = np.copy(X)
         scaler = preprocessing.MinMaxScaler().fit(X)
         X = scaler.transform(X)

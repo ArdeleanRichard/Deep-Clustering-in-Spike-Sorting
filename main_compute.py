@@ -10,16 +10,6 @@ from constants import DIR_RESULTS
 from gs_algos import load_algorithms
 from gs_datasets import load_all_data
 
-import torch
-print(torch.cuda.is_available())  # Should return True if GPU is available
-print(torch.cuda.device_count())  # Number of GPUs available
-
-
-seed=42
-torch.manual_seed(seed)
-np.random.seed(seed)
-
-
 
 def normalize_dbs(df):
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
@@ -33,8 +23,9 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
 
         for dataset_name, (X, y_true) in datasets:
             print(algo_name, dataset_name)
+
             # Normalize dataset
-            test = np.copy(X)
+            X_copy = np.copy(X)
             scaler = preprocessing.MinMaxScaler().fit(X)
             X = scaler.transform(X)
             X = np.clip(X, 0, 1)
@@ -52,56 +43,46 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
 
             for params in param_combinations:
                 param_dict = dict(zip(param_names, params))
-                is_nondeterministic = False  # Change if needed
                 scores_per_repeat = []
 
-                for _ in range(n_repeats if is_nondeterministic else 1):
-                    try:
-                        estimator = algo_details["estimator"](**param_dict)
-                        y_pred = estimator.fit_predict(X)
+                try:
+                    estimator = algo_details["estimator"](**param_dict)
+                    y_pred = estimator.fit_predict(X)
 
-                        if len(np.unique(y_pred)) > 1:
-                            ari = adjusted_rand_score(y_true, y_pred)
-                            ami = adjusted_mutual_info_score(y_true, y_pred)
-                            contingency_mat = contingency_matrix(y_true, y_pred)
-                            purity = np.sum(np.amax(contingency_mat, axis=0)) / np.sum(contingency_mat)
-                            silhouette = silhouette_score(test, y_pred)
-                            calinski_harabasz = calinski_harabasz_score(test, y_pred)
-                            davies_bouldin = davies_bouldin_score(test, y_pred)
-                        else:
-                            print(f"[1CLUST] {algo_name}, {params}")
-                            ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
+                    if len(np.unique(y_pred)) > 1:
+                        ari = adjusted_rand_score(y_true, y_pred)
+                        ami = adjusted_mutual_info_score(y_true, y_pred)
+                        contingency_mat = contingency_matrix(y_true, y_pred)
+                        purity = np.sum(np.amax(contingency_mat, axis=0)) / np.sum(contingency_mat)
+                        silhouette = silhouette_score(X_copy, y_pred)
+                        calinski_harabasz = calinski_harabasz_score(X_copy, y_pred)
+                        davies_bouldin = davies_bouldin_score(X_copy, y_pred)
+                    else:
+                        print(f"[1CLUST] {algo_name}, {params}")
+                        ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
 
-                        scores_per_repeat.append({
-                            "dataset": dataset_name, # Track dataset in results
-                            "adjusted_rand_score": ari,
-                            "adjusted_mutual_info_score": ami,
-                            "purity_score": purity,
-                            "silhouette_score": silhouette,
-                            "calinski_harabasz_score": calinski_harabasz,
-                            "davies_bouldin_score": davies_bouldin,
-                        })
-                    except Exception as e:
-                        print(f"[ERROR] {algo_name}, {params}, {e}")
-                        scores_per_repeat.append({
-                            "dataset": dataset_name,
-                            "adjusted_rand_score": -1,
-                            "adjusted_mutual_info_score": -1,
-                            "purity_score": -1,
-                            "silhouette_score": -1,
-                            "calinski_harabasz_score": -1,
-                            "davies_bouldin_score": -1,
-                        })
+                    scores_per_repeat.append({
+                        "dataset": dataset_name, # Track dataset in results
+                        "adjusted_rand_score": ari,
+                        "adjusted_mutual_info_score": ami,
+                        "purity_score": purity,
+                        "silhouette_score": silhouette,
+                        "calinski_harabasz_score": calinski_harabasz,
+                        "davies_bouldin_score": davies_bouldin,
+                    })
+                except Exception as e:
+                    print(f"[ERROR] {algo_name}, {params}, {e}")
+                    scores_per_repeat.append({
+                        "dataset": dataset_name,
+                        "adjusted_rand_score": -1,
+                        "adjusted_mutual_info_score": -1,
+                        "purity_score": -1,
+                        "silhouette_score": -1,
+                        "calinski_harabasz_score": -1,
+                        "davies_bouldin_score": -1,
+                    })
 
-                if is_nondeterministic:
-                    aggregated_scores = {
-                        key: np.nanmean([score[key] for score in scores_per_repeat])
-                        for key in scores_per_repeat[0]
-                    }
-                else:
-                    aggregated_scores = scores_per_repeat[0]
-
-                results.append(aggregated_scores)
+                results.append(scores_per_repeat[0])
 
             # Save results for this algorithm
             df = pd.DataFrame(results)
