@@ -142,20 +142,23 @@ if __name__ == "__main__":
     metric_names = ['ARI', 'AMI', 'Purity', 'SS', 'CHS', 'DBS']
 
 
+
     methods_dict = {
         'PCA':          filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns),
         'ICA':          filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns),
         'Isomap':       filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns),
         'AE':           filter_columns_and_save(f"./results/ae_kmeans.csv", columns=columns),
-        # "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
+        "ACeDeC":       filter_columns_and_save(f"./results/acedec.csv", columns=columns),
+        "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
         "DCN":          filter_columns_and_save(f"./results/dcn.csv", columns=columns),
         "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
-        "DEC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
-        # "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
-        # "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
-        # "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
+        "DEC":          filter_columns_and_save(f"./results/dec.csv", columns=columns),
+        "DKM":          filter_columns_and_save(f"./results/dkm.csv", columns=columns),
+        "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
+        "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
+        "DipEncoder":   filter_columns_and_save(f"./results/dipencoder.csv", columns=columns),
+        "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
         "N2D":          filter_columns_and_save(f"./results/n2d.csv", columns=columns),
         "VaDE":         filter_columns_and_save(f"./results/vade.csv", columns=columns),
     }
-
     main(methods_dict)
