@@ -20,21 +20,23 @@ def load_algorithms():
 
 
         # # DEEP CLUSTERINGS:
-        # "acedec": {
-        #     "estimator": ACeDeC,
-        #     "param_grid": {
-        #         "n_clusters": [2],
-        #         "init": ["acedec"], #, 'subkmeans', 'random', 'sgd'],
-        #         "embedding_size": [10], #, 20, 30, 40, 50, 60, 70],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #
-        #         # "pretrain_epochs": [100, 150, 200],
-        #         # "clustering_epochs": [100, 150, 200],
-        #         # "batch_size": [32, 64, 128],
-        #
-        #     },
-        # },
+        "acedec": {
+            "estimator": ACeDeC,
+            "param_grid": {
+                "n_clusters": [2],
+                "init": ["acedec"], #, 'subkmeans', 'random', 'sgd'],
+                "embedding_size": [10], #, 20, 30, 40, 50, 60, 70],
+                "pretrain_optimizer_params": [{"lr": 1e-3}],
+                "clustering_optimizer_params": [{"lr": 1e-3}],
+                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+                # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+
+                # "pretrain_epochs": [100, 150, 200],
+                # "clustering_epochs": [100, 150, 200],
+                # "batch_size": [32, 64, 128],
+
+            },
+        },
         # "aec": {
         #     "estimator": AEC,
         #     "param_grid": {
@@ -44,7 +46,7 @@ def load_algorithms():
         #         "clustering_optimizer_params": [{"lr": 1e-4}],
         #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
         # "dcn": {
@@ -52,24 +54,24 @@ def load_algorithms():
         #     "param_grid": {
         #         "n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
         #         "clustering_optimizer_params": [{"lr": 1e-3}],
         #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
-        "ddc": {
-            "estimator": DDC,
-            "param_grid": {
-                "embedding_size": [10],
-                "ratio": [0.1], #[0.01, 0.05, 0.1, 0.2],
-                "pretrain_optimizer_params": [{"lr": 1e-3}],
-                # "ratio": [0.01, 0.05, 0.1, 0.2, 0.15], #[0.01, 0.05, 0.1, 0.2],
-                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [42]
-            },
-        },
+        # "ddc": {
+        #     "estimator": DDC,
+        #     "param_grid": {
+        #         "embedding_size": [10],
+        #         "ratio": [0.1], #[0.01, 0.05, 0.1, 0.2],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         # "ratio": [0.01, 0.05, 0.1, 0.2, 0.15], #[0.01, 0.05, 0.1, 0.2],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [random_state]
+        #     },
+        # },
         # "dec": {
         #     "estimator": DEC,
         #     "param_grid": {
@@ -92,7 +94,7 @@ def load_algorithms():
         #         "embedding_size": [10],
         #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
 
@@ -104,7 +106,7 @@ def load_algorithms():
         #         "embedding_size": [10],
         #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
         # "dipencoder": {
@@ -116,7 +118,7 @@ def load_algorithms():
         #         "clustering_optimizer_params": [{"lr": 1e-4}],
         #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
         # "dkm": {
@@ -128,7 +130,7 @@ def load_algorithms():
         #         "clustering_optimizer_params": [{"lr": 1e-5}],
         #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42],
+        #         "random_state": [random_state],
         #     },
         # },
         # "idec": {
@@ -138,7 +140,7 @@ def load_algorithms():
         #         "embedding_size": [10],
         #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [42]
+        #         "random_state": [random_state]
         #     },
         # },
         # "n2d": {
@@ -152,7 +154,7 @@ def load_algorithms():
         #         "manifold_params": [{"n_components":2, "perplexity": 35, "random_state":42},],
         #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4},],
         #         # "manifold_params": [{"perplexity": 15}, {"perplexity": 25}, {"perplexity": 35}, {"perplexity": 50}],
-        #         "random_state": [42],
+        #         "random_state": [random_state],
         #     },
         # },
         # "vade": {
@@ -173,7 +175,7 @@ def load_algorithms():
         #         # "batch_size": [256, 32, 64, 128, 512],
         #         # "pretrain_epochs": [10, 50, 100],
         #         # "clustering_epochs": [150, 300],
-        #         "random_state": [42],
+        #         "random_state": [random_state],
         #
         #         # "initial_clustering_class": [KMeans],
         #         # "initial_clustering_params": [{}],
