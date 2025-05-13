@@ -16,6 +16,8 @@ def load_algorithms():
     layers = [79, 100, 100, 100, 10]
     dropout = 0.5
     batch_norm = True
+    # neural_network = FeedforwardAutoencoder(layers=layers) #, dropout=dropout, batch_norm=batch_norm, random_state=random_state)
+
     algorithms = {
 
 
@@ -90,10 +92,13 @@ def load_algorithms():
         # "deepect": {
         #     "estimator": DeepECT,
         #     "param_grid": {
-        #         "max_n_leaf_nodes": [1], #,2,3,4,5, 10, 20, 50, 100],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "max_n_leaf_nodes": [20],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}],
+        #         "clustering_optimizer_params": [{"lr": 1e-4}],
+        #         # "max_n_leaf_nodes": [1,2,3,4,5, 10, 20, 50, 100],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         "random_state": [random_state]
         #     },
         # },
@@ -133,20 +138,20 @@ def load_algorithms():
         #         "random_state": [random_state],
         #     },
         # },
-        "idec": {
-            "estimator": IDEC,
-            "param_grid": {
-                "n_clusters": [2],
-                "embedding_size": [10],
-                # "alpha": [0.25],
-                # "pretrain_optimizer_params": [{"lr": 1e-3}],
-                # "clustering_optimizer_params": [{"lr": 1e-4}],
-                "alpha": [0.1, 0.25, 0.5, 0.75, 1.0, 1.5],
-                "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [random_state]
-            },
-        },
+        # "idec": {
+        #     "estimator": IDEC,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #         "embedding_size": [10],
+        #         # "alpha": [0.25],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-4}],
+        #         "alpha": [0.1, 0.25, 0.5, 0.75, 1.0, 1.5],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [random_state]
+        #     },
+        # },
         # "n2d": {
         #     "estimator": N2D,
         #     "param_grid": {
@@ -222,7 +227,5 @@ def load_algorithms():
         # },
 
     }
-    # neural_network = FeedforwardAutoencoder(layers=layers) #, dropout=dropout, batch_norm=batch_norm, random_state=random_state)
-
     return algorithms
 
