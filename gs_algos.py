@@ -101,11 +101,16 @@ def load_algorithms():
         # "dipdeck": {
         #     "estimator": DipDECK,
         #     "param_grid": {
-        #         "n_clusters_init": [2,3,5,10,20],
-        #         "dip_merge_threshold": [0.5], #[0.1, 0.3, 0.5, 0.7, 0.9],
+        #         "n_clusters_init": [2],
+        #         "min_n_clusters": [2],
+        #         "max_n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "dip_merge_threshold": [0.9],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}],
+        #         "clustering_optimizer_params": [{"lr": 1e-3}],
+        #         # "dip_merge_threshold": [0.1, 0.3, 0.5, 0.7, 0.9],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
         #         "random_state": [random_state]
         #     },
         # },
@@ -133,20 +138,20 @@ def load_algorithms():
         #         "random_state": [random_state],
         #     },
         # },
-        "idec": {
-            "estimator": IDEC,
-            "param_grid": {
-                "n_clusters": [2],
-                "embedding_size": [10],
-                # "alpha": [0.25],
-                # "pretrain_optimizer_params": [{"lr": 1e-3}],
-                # "clustering_optimizer_params": [{"lr": 1e-4}],
-                "alpha": [0.1, 0.25, 0.5, 0.75, 1.0, 1.5],
-                "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [random_state]
-            },
-        },
+        # "idec": {
+        #     "estimator": IDEC,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #         "embedding_size": [10],
+        #         # "alpha": [0.25],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-4}],
+        #         "alpha": [0.1, 0.25, 0.5, 0.75, 1.0, 1.5],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [random_state]
+        #     },
+        # },
         # "n2d": {
         #     "estimator": N2D,
         #     "param_grid": {
