@@ -34,8 +34,14 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
 
             # Special parameter handling
             for param_name in param_names:
-                if param_name == "n_clusters" or param_name == "n_clusters_init":
+                if param_name == "n_clusters":
                     algo_details["param_grid"]["n_clusters"] = [len(np.unique(y_true))]
+                if param_name == "n_clusters_init":
+                    algo_details["param_grid"]["n_clusters_init"] = [len(np.unique(y_true))]
+                if param_name == "min_n_clusters":
+                    algo_details["param_grid"]["min_n_clusters"] = [len(np.unique(y_true))-1]
+                if param_name == "max_n_clusters":
+                    algo_details["param_grid"]["max_n_clusters"] = [len(np.unique(y_true))+1]
                 if param_name == "input_dim":
                     algo_details["param_grid"]["input_dim"] = [X.shape[1]]
 
