@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_ran
 from sklearn.metrics.cluster import contingency_matrix
 
 from constants import DIR_RESULTS
-from gs_algos import load_algorithms
+from gs_algos import load_algorithms, random_state
 from gs_datasets import load_all_data
 
 
@@ -44,6 +44,14 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                     algo_details["param_grid"]["max_n_clusters"] = [len(np.unique(y_true))+1]
                 if param_name == "input_dim":
                     algo_details["param_grid"]["input_dim"] = [X.shape[1]]
+
+            if algo_name == "dcn":
+                if len(y_true) < 6000:
+                    algo_details["param_grid"]["pretrain_optimizer_params"] = [{"lr": 1e-2}]
+                else:
+                    algo_details["param_grid"]["pretrain_optimizer_params"] = [{"lr": 1e-3}]
+            print(algo_details["param_grid"]["pretrain_optimizer_params"])
+
 
             param_combinations = list(itertools.product(*algo_details["param_grid"].values()))
 

@@ -1,3 +1,6 @@
+import os
+import random
+
 from clustpy.deep import ACeDeC, AEC, DCN, DDC, DEC, DeepECT, DipDECK, DipEncoder, DKM, ENRC, IDEC, VaDE, N2D
 from clustpy.deep.neural_networks import FeedforwardAutoencoder
 from sklearn.cluster import KMeans, DBSCAN, AgglomerativeClustering, SpectralClustering, MeanShift, Birch, OPTICS, HDBSCAN, AffinityPropagation
@@ -7,9 +10,12 @@ from clustering_algos.autoclustering_pytorch import AutoClustering
 import numpy as np
 import torch
 
+CUDA_VISIBLE_DEVICES=""
 random_state=42
-torch.manual_seed(random_state)
+os.environ["PYTHONHASHSEED"] = str(random_state)
+random.seed(random_state)
 np.random.seed(random_state)
+torch.manual_seed(random_state)
 
 
 def load_algorithms():
@@ -56,11 +62,12 @@ def load_algorithms():
         #     "param_grid": {
         #         "n_clusters": [2],
         #         "embedding_size": [10],
-        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
-        #         "clustering_optimizer_params": [{"lr": 1e-3}],
-        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-        #         "random_state": [random_state]
+        #         # "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-3}],
+        #         "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [random_state],
+        #         "device": ['cpu'],
         #     },
         # },
         # "ddc": {
@@ -128,7 +135,8 @@ def load_algorithms():
                 "clustering_optimizer_params": [{"lr": 1e-4}],
                 # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
                 # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [random_state]
+                "random_state": [random_state],
+                "device": ['cpu'],
             },
         },
         # "dkm": {
