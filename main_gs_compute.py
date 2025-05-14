@@ -154,7 +154,7 @@ if __name__ == "__main__":
     # algorithms = load_algorithms()
     # perform_grid_search(datasets, algorithms)
 
-    for i in range(2):
+    for i in range(1):
         datasets = load_all_data()
         algorithms = load_algorithms()
         perform_grid_search(datasets, algorithms, add=f"_{i}")
