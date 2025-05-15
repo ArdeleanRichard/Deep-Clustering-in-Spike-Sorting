@@ -1,10 +1,2 @@
-n_clusters,embedding_size,pretrain_optimizer_params,clustering_optimizer_params,random_state,initial_clustering_class,initial_clustering_params,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,norm_davies_bouldin_score
-3,10,{'lr': 0.01},{'lr': 0.001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
-3,10,{'lr': 0.01},{'lr': 0.0001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},0.2916582714676319,0.25419075961423027,0.8692043503148255,0.1731080937360035,78.30197829831818,6.072425552673693,0.1413942066342367
-3,10,{'lr': 0.01},{'lr': 1e-05},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
-3,10,{'lr': 0.001},{'lr': 0.001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},0.5079077312237839,0.39313205804271756,0.8692043503148255,0.21260927446904426,336.6289488871283,2.967422988452457,0.25205278159414574
-3,10,{'lr': 0.001},{'lr': 0.0001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
-3,10,{'lr': 0.001},{'lr': 1e-05},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
-3,10,{'lr': 0.0001},{'lr': 0.001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-0.04068997910708652,0.09603051336788881,0.8692043503148255,0.11882619016170232,696.4901141723007,2.0175732274458515,0.3313921236126636
-3,10,{'lr': 0.0001},{'lr': 0.0001},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},0.21356632564072833,0.37411148230831537,0.9459072696050372,0.143099188892985,927.668445887689,2.032001365380746,0.3298151549065758
-3,10,{'lr': 0.0001},{'lr': 1e-05},42,<class 'sklearn.cluster._kmeans.KMeans'>,{},-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
+n_clusters,embedding_size,pretrain_optimizer_params,clustering_optimizer_params,batch_size,pretrain_epochs,clustering_epochs,clustering_loss_weight,ssl_loss_weight,random_state,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,norm_davies_bouldin_score
+3,10,{'lr': 0.01},{'lr': 0.001},256,10,300,1.0,0.5,42,0.748613429775557,0.7422844700440555,0.953921007441328,0.21694560683915692,626.2307953160087,2.460024223407547,0.289015317648605

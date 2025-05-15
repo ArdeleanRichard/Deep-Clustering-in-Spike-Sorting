@@ -186,14 +186,16 @@ def load_algorithms():
 
                 "embedding_size": [10],
                 # "neural_network": [(FeedforwardAutoencoder, {"layers": [79, 100, 100, 100, 50], "dropout": 0.5, "batch_norm": True})], # error no sense
-                # "pretrain_optimizer_params":    [{"lr": 1e-2}],
-                # "clustering_optimizer_params":  [{"lr": 1e-3}],
-                # "batch_size": [256],
-                # "pretrain_epochs": [10],
-                # "clustering_epochs": [150],
+                "pretrain_optimizer_params":    [{"lr": 1e-2}],
+                "clustering_optimizer_params":  [{"lr": 1e-3}],
+                "batch_size": [256],
+                "pretrain_epochs": [10],
+                "clustering_epochs": [300],
+                "clustering_loss_weight": [1.0],
+                "ssl_loss_weight": [0.5],
 
-                "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}],
-                "clustering_optimizer_params": [{"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}],
+                # "clustering_optimizer_params": [{"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
                 # "batch_size": [256, 32, 64, 128, 512],
                 # "pretrain_epochs": [10, 50, 100],
                 # "clustering_epochs": [150, 300],
@@ -206,8 +208,7 @@ def load_algorithms():
                 # "embedding_size": [10, 20, 30, 40, 50, 60, 70],
 
                 # "embedding_size": [10],
-                # "clustering_loss_weight": [1.0],
-                # "ssl_loss_weight": [0.1],
+
 
                 # "embedding_size": [10],
                 # "batch_size": [1024],
