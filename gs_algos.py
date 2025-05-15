@@ -191,8 +191,8 @@ def load_algorithms():
                 "batch_size": [256],
                 "pretrain_epochs": [10],
                 "clustering_epochs": [300],
-                "clustering_loss_weight": [1.0],
-                "ssl_loss_weight": [0.5],
+                "clustering_loss_weight": [0.5, 1.0],
+                "ssl_loss_weight": [0.5, 1.0],
 
                 # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}],
                 # "clustering_optimizer_params": [{"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
