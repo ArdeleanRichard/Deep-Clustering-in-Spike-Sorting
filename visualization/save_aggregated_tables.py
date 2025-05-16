@@ -8,25 +8,21 @@ def read_data():
     FOLDER = "../results/saved/"
 
     methods_dict = {
-        'PCA':                  filter_df(f"{FOLDER}pca_kmeans.csv", columns=columns),
-        "MDS":                  filter_df(f"{FOLDER}mds_kmeans.csv", columns=columns),
-        'ICA':                  filter_df(f"{FOLDER}ica_kmeans.csv", columns=columns),
-        'KPCA':                 filter_df(f"{FOLDER}kpca_kmeans.csv", columns=columns),
-        'SOM':                  filter_df(f"{FOLDER}som_kmeans.csv", columns=columns),
-        # 'AE':                   np.loadtxt(f"{FOLDER}ae_normal.csv", dtype=float, delimiter=","),
-        'AE':                   filter_df(f"{FOLDER}ae_kmeans.csv", columns=columns),
-        "LLE":                  filter_df(f"{FOLDER}lle_kmeans.csv", columns=columns),
-        "MLLE":                 filter_df(f"{FOLDER}mlle_kmeans.csv", columns=columns),
-        # "HLLE":               filter_columns_and_save(f"{FOLDER}hlle_kmeans.csv", columns=columns),
-        # "LTSA":               filter_columns_and_save(f"{FOLDER}ltsa_kmeans.csv", columns=columns),
-        "Keppler Mapper":       filter_df(f"{FOLDER}kmapper_kmeans.csv", columns=columns),
-        'Isomap':               filter_df(f"{FOLDER}/isomap_kmeans.csv", columns=columns),
-        'Spectral embedding':   filter_df(f"{FOLDER}/spectral_kmeans.csv", columns=columns),
-        "t-SNE":                filter_df(f"{FOLDER}tsne_kmeans.csv", columns=columns),
-        "Diffusion Map":        filter_df(f"{FOLDER}diffusion_map_kmeans.csv", columns=columns),
-        "PHATE":                filter_df(f"{FOLDER}phate_kmeans.csv", columns=columns),
-        'UMAP':                 filter_df(f"{FOLDER}umap_kmeans.csv", columns=columns),
-        "Trimap":               filter_df(f"{FOLDER}trimap_kmeans.csv", columns=columns),
+        'PCA':          filter_df(f"../results/pca_kmeans.csv", columns=columns),
+        'ICA':          filter_df(f"../results/ica_kmeans.csv", columns=columns),
+        'Isomap':       filter_df(f"../results/isomap_kmeans.csv", columns=columns),
+        "ACeDeC":       filter_df(f"../results/acedec.csv", columns=columns),
+        "AEC":          filter_df(f"../results/aec.csv", columns=columns),
+        "DCN":          filter_df(f"../results/dcn.csv", columns=columns),
+        "DDC":          filter_df(f"../results/ddc.csv", columns=columns),
+        "DEC":          filter_df(f"../results/dec.csv", columns=columns),
+        "DKM":          filter_df(f"../results/dkm.csv", columns=columns),
+        "DeepECT":      filter_df(f"../results/deepect.csv", columns=columns),
+        "DipDECK":      filter_df(f"../results/dipdeck.csv", columns=columns),
+        "DipEncoder":   filter_df(f"../results/dipencoder.csv", columns=columns),
+        "IDEC":         filter_df(f"../results/idec.csv", columns=columns),
+        "N2D":          filter_df(f"../results/n2d.csv", columns=columns),
+        "VaDE":         filter_df(f"../results/vade.csv", columns=columns),
     }
 
 
@@ -83,6 +79,6 @@ def filter_df(input_csv, columns):
     return df_filtered
 
 if __name__ == "__main__":
-    for simulation_number in [53, 81, 67, 86]:
+    for simulation_number in [4, 15, 20, 2]:
         dfs = read_data()
         aggregate_by_dataset(simulation_number, dfs)
