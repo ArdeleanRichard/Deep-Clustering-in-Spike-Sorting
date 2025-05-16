@@ -48,11 +48,10 @@ LABEL_COLOR_MAP_SMALLER = {
     1: 'deepskyblue',      # blue 2
     2: 'dodgerblue',       # blue 3
 
-    3: 'lightgreen',       # green 1
-    4: 'mediumseagreen',   # green 2
-    5: 'seagreen',         # green 3
-
-    6: 'lightcoral',       # red group
+    3: 'mistyrose',        # red group
+    4: 'lavenderblush',
+    5: 'lightpink',
+    6: 'lightcoral',
     7: 'coral',
     8: 'darksalmon',
     9: 'salmon',

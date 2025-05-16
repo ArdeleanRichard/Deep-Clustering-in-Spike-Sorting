@@ -1,12 +1,9 @@
 import itertools
-import os
 
 import clustpy.deep.enrc
 import numpy as np
 import pandas as pd
-import torch
 from sklearn import preprocessing
-from sklearn.cluster import estimate_bandwidth
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
 
@@ -15,30 +12,8 @@ from gs_algos import load_algorithms
 from gs_datasets import load_all_data
 
 
-# acedec uniform {'lr': 0.001},{'lr': 1e-05}
-# acedec {'lr': 0.01},{'lr': 0.0001} / {'lr': 0.001},{'lr': 0.001} / {'lr': 0.01},{'lr': 0.001}
-# ddc uniform 0.15,{'lr': 0.01}  -  0.15 {'lr': 0.001}
-# dec normal {'lr': 0.01},{'lr': 0.001}    \/ {'lr': 0.001},{'lr': 1e-05}
-# deepect both {'lr': 0.01},{'lr': 0.001} / not 1
-# dipdeck uniform {'lr': 0.01},{'lr': 1e-05} - needs rerun n_clusters
-# dkm normal {'lr': 0.01},{'lr': 0.0001} weak
-# idec uniform {'lr': 0.001},{'lr': 0.01} / {'lr': 0.001},{'lr': 0.0001}
-#
-#
-#
-# n2d uniform {'lr': 0.001} *
-#
-#
-#
-# aec uniform {'lr': 0.01},{'lr': 0.0001} *
-# dcn uniform {'lr': 0.01},{'lr': 0.001} *
-# dipencoder normal {'lr': 0.001},{'lr': 0.0001} *
-
-
-
 
 def normalize_dbs(df):
-    # df['davies_bouldin_score'] = 1 - df['davies_bouldin_score'] / df['davies_bouldin_score'].max() # doesnt work as well as I would like
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
     return df
 

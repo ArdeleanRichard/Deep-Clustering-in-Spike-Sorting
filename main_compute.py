@@ -2,20 +2,23 @@ import itertools
 import os
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
 
-from constants import DIR_RESULTS
-from gs_algos import load_algorithms, random_state
+from constants import DIR_RESULTS, DIR_FIGURES
+from gs_algos import load_algorithms
 from gs_datasets import load_all_data
+from visualization import scatter_plot
 
 
 def normalize_dbs(df):
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
     return df
 
-def perform_grid_search(datasets, algorithms, n_repeats=10):
+def perform_grid_search(datasets, algorithms):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)
 
     for algo_name, algo_details in algorithms.items():
@@ -23,6 +26,14 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
 
         for dataset_name, (X, y_true) in datasets:
             print(algo_name, dataset_name)
+
+            pca_2d = PCA(n_components=2)
+            X_2d = pca_2d.fit_transform(X)
+
+            scatter_plot.plot(f'{dataset_name} true labels', X_2d, y_true, marker='o')
+            plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_gt.svg')
+            plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_gt.png')
+            plt.close()
 
             # Normalize dataset
             X_copy = np.copy(X)
@@ -75,6 +86,11 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                         print(f"[1CLUST] {algo_name}, {params}")
                         ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
 
+                    scatter_plot.plot(f'{algo_name} on {dataset_name}', X_2d, y_pred, marker='o')
+                    plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{algo_name}.svg')
+                    plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{algo_name}.png')
+                    plt.close()
+
                     scores_per_repeat.append({
                         "dataset": dataset_name, # Track dataset in results
                         "adjusted_rand_score": ari,
@@ -96,6 +112,7 @@ def perform_grid_search(datasets, algorithms, n_repeats=10):
                         "davies_bouldin_score": -1,
                     })
 
+                print("RESULTS: ", scores_per_repeat[0])
                 results.append(scores_per_repeat[0])
 
             # Save results for this algorithm
