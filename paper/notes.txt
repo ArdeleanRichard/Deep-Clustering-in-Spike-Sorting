@@ -1,2 +1,0 @@
-DEC and IDEC unstable even with random_state
-Yet same parameters for best outputs
