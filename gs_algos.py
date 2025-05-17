@@ -6,7 +6,7 @@ from clustpy.deep import ACeDeC, AEC, DCN, DDC, DEC, DeepECT, DipDECK, DipEncode
 from clustering_algos.autoclustering_pytorch import AutoClustering
 
 CUDA_VISIBLE_DEVICES=""
-random_state=63
+random_state=42
 os.environ["PYTHONHASHSEED"] = str(random_state)
 random.seed(random_state)
 np.random.seed(random_state)
@@ -127,18 +127,18 @@ def load_algorithms():
         #         "device": ['cpu'],
         #     },
         # },
-        "dkm": {
-            "estimator": DKM,
-            "param_grid": {
-                "n_clusters": [2],
-                "embedding_size": [10],
-                "pretrain_optimizer_params": [{"lr": 1e-3}],
-                "clustering_optimizer_params": [{"lr": 1e-5}],
-                # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
-                "random_state": [random_state],
-            },
-        },
+        # "dkm": {
+        #     "estimator": DKM,
+        #     "param_grid": {
+        #         "n_clusters": [2],
+        #         "embedding_size": [10],
+        #         "pretrain_optimizer_params": [{"lr": 1e-3}],
+        #         "clustering_optimizer_params": [{"lr": 1e-5}],
+        #         # "pretrain_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         # "clustering_optimizer_params": [{"lr": 1e-2}, {"lr": 1e-3}, {"lr": 1e-4}, {"lr": 1e-5}],
+        #         "random_state": [random_state],
+        #     },
+        # },
         # "idec": {
         #     "estimator": IDEC,
         #     "param_grid": {
