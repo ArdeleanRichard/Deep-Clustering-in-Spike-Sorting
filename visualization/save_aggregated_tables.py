@@ -34,8 +34,8 @@ def read_data():
 
     return dfs
 
-def aggregate_by_dataset(sim_nr, dfs):
-    target_dataset = f"Sim{sim_nr}"
+def aggregate_by_dataset(target_dataset, dfs):
+
 
     rows = []
     for (algorithm, df) in dfs:
@@ -64,11 +64,12 @@ def aggregate_by_dataset(sim_nr, dfs):
         result_df = result_df.rename(columns=column_renames)
 
         result_df = result_df.drop(columns=['dataset'])
-        result_df.to_csv(f"../paper/tables/sim{sim_nr}.csv", index=False)
+        result_df.to_csv(f"../paper/tables/{target_dataset}.csv", index=False)
 
         print("Aggregation complete: saved to aggregated_results.csv")
     else:
         print(f"No matching dataset '{target_dataset}' found in the CSVs.")
+
 
 
 def filter_df(input_csv, columns):
@@ -82,3 +83,7 @@ if __name__ == "__main__":
     for simulation_number in [4, 15, 20, 2]:
         dfs = read_data()
         aggregate_by_dataset(simulation_number, dfs)
+
+    for c_number in [28, 37]:
+        dfs = read_data()
+        aggregate_by_dataset(target_dataset=f"kampff_c{c_number}", dfs=dfs)

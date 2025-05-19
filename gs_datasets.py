@@ -1,5 +1,7 @@
 import numpy as np
 from dataset_parsing import simulations_dataset as ds
+from dataset_parsing.read_kampff import read_kampff_c28, read_kampff_c37
+
 
 def load_all_data():
     datasets = []
@@ -12,3 +14,12 @@ def load_all_data():
 
 
 
+def load_real_data():
+    datasets = []
+
+    X, y, y_true = read_kampff_c28()
+    datasets.append((f"kampff_c28", (np.array(X[0]), np.array(y[0]), np.array(y_true))))
+    X, y, y_true = read_kampff_c37()
+    datasets.append((f"kampff_c37", (np.array(X[0]), np.array(y[0]), np.array(y_true))))
+
+    return datasets

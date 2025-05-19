@@ -24,13 +24,13 @@ def perform_grid_search(datasets, algorithms):
     for algo_name, algo_details in algorithms.items():
         results = []
 
-        for dataset_name, (X, y_true) in datasets:
+        for dataset_name, (X, y, y_true) in datasets:
             print(algo_name, dataset_name)
 
             pca_2d = PCA(n_components=2)
             X_2d = pca_2d.fit_transform(X)
 
-            scatter_plot.plot(f'{dataset_name} true labels', X_2d, y_true, marker='o')
+            scatter_plot.plot(f'{dataset_name} true labels', X_2d, y_true, marker='o', binary_markers=y_true)
             plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_gt.svg')
             plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_gt.png')
             plt.close()
@@ -46,21 +46,16 @@ def perform_grid_search(datasets, algorithms):
             # Special parameter handling
             for param_name in param_names:
                 if param_name == "n_clusters":
-                    algo_details["param_grid"]["n_clusters"] = [len(np.unique(y_true))]
+                    algo_details["param_grid"]["n_clusters"] = [len(np.unique(y))]
                 if param_name == "n_clusters_init":
-                    algo_details["param_grid"]["n_clusters_init"] = [len(np.unique(y_true))]
+                    algo_details["param_grid"]["n_clusters_init"] = [len(np.unique(y))]
                 if param_name == "min_n_clusters":
-                    algo_details["param_grid"]["min_n_clusters"] = [len(np.unique(y_true))-1]
+                    algo_details["param_grid"]["min_n_clusters"] = [len(np.unique(y))-1]
                 if param_name == "max_n_clusters":
-                    algo_details["param_grid"]["max_n_clusters"] = [len(np.unique(y_true))+1]
+                    algo_details["param_grid"]["max_n_clusters"] = [len(np.unique(y))+1]
                 if param_name == "input_dim":
                     algo_details["param_grid"]["input_dim"] = [X.shape[1]]
 
-            if algo_name == "dcn":
-                if len(y_true) < 6000:
-                    algo_details["param_grid"]["pretrain_optimizer_params"] = [{"lr": 1e-2}]
-                else:
-                    algo_details["param_grid"]["pretrain_optimizer_params"] = [{"lr": 1e-3}]
             print(algo_details["param_grid"]["pretrain_optimizer_params"])
 
 
@@ -86,7 +81,7 @@ def perform_grid_search(datasets, algorithms):
                         print(f"[1CLUST] {algo_name}, {params}")
                         ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
 
-                    scatter_plot.plot(f'{algo_name} on {dataset_name}', X_2d, y_pred, marker='o')
+                    scatter_plot.plot(f'{algo_name} on {dataset_name}', X_2d, y_pred, marker='o', binary_markers=y_true)
                     plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{algo_name}.svg')
                     plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{algo_name}.png')
                     plt.close()
@@ -121,6 +116,6 @@ def perform_grid_search(datasets, algorithms):
             df.to_csv(DIR_RESULTS + f"{algo_name}.csv", index=False)
 
 if __name__ == "__main__":
-    datasets = load_all_data()
+    datasets = load_real_data()
     algorithms = load_algorithms()
     perform_grid_search(datasets, algorithms)
