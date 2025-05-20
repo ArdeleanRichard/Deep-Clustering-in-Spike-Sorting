@@ -80,9 +80,9 @@ def filter_df(input_csv, columns):
     return df_filtered
 
 if __name__ == "__main__":
-    for simulation_number in [4, 15, 20, 2]:
-        dfs = read_data()
-        aggregate_by_dataset(simulation_number, dfs)
+    # for simulation_number in [4, 15, 20, 2]:
+    #     dfs = read_data()
+    #     aggregate_by_dataset(simulation_number, dfs)
 
     for c_number in [28, 37]:
         dfs = read_data()

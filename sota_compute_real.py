@@ -23,21 +23,21 @@ print(torch.cuda.device_count())  # Number of GPUs available
 
 def load_algorithms_fe():
     algorithms = {
-        # "pca": {
-        #     "estimator": PCA,
-        #     "param_grid": {
-        #         "n_components": 2,
-        #     },
-        # },
-        # "ica": {
-        #     "estimator": FastICA,
-        #     "param_grid": {
-        #         "n_components": 2,
-        #         "fun": "logcosh",
-        #         "max_iter": 200,
-        #         "tol": 1e-3,
-        #     },
-        # },
+        "pca": {
+            "estimator": PCA,
+            "param_grid": {
+                "n_components": 2,
+            },
+        },
+        "ica": {
+            "estimator": FastICA,
+            "param_grid": {
+                "n_components": 2,
+                "fun": "logcosh",
+                "max_iter": 200,
+                "tol": 1e-3,
+            },
+        },
         "isomap": {
             "estimator": Isomap,
             "param_grid": {
@@ -88,6 +88,9 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                 # X = scaler.transform(X)
                 # X = np.clip(X, 0, 1)
 
+                pca_2d = PCA(n_components=2)
+                X_2d = pca_2d.fit_transform(X)
+
                 fe_param_names = list(fe_details["param_grid"].keys())
                 clust_param_names = list(clust_details["param_grid"].keys())
 
@@ -126,34 +129,30 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                         ari = ami = purity = silhouette = calinski_harabasz = davies_bouldin = -1
 
                     scores = {
+                        "dataset": dataset_name, # Track dataset in results
                         "adjusted_rand_score": ari,
                         "adjusted_mutual_info_score": ami,
                         "purity_score": purity,
                         "silhouette_score": silhouette,
                         "calinski_harabasz_score": calinski_harabasz,
                         "davies_bouldin_score": davies_bouldin,
-                        "dataset": dataset_name  # Track dataset in results
                     }
-                    scatter_plot.plot(f'{fe_name} + {clust_name} on {dataset_name}', X_transformed, y_pred, marker='o')
+                    scatter_plot.plot(f'{fe_name} + {clust_name} on {dataset_name}', X_2d, y_pred, marker='o', binary_markers=y_true)
                     plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{fe_name}_{clust_name}.svg')
                     plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{fe_name}_{clust_name}.png')
                     plt.close()
 
-                    scatter_plot.plot(f'{fe_name} with GT on {dataset_name}', X_transformed, y_true, marker='o')
-                    plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{fe_name}_gt.svg')
-                    plt.savefig(DIR_FIGURES + "pngs/" + f'{dataset_name}_{fe_name}_gt.png')
-                    plt.close()
 
                 except Exception as e:
                     print(f"[ERROR] {clust_name}, {fe_params}, {e}")
                     scores = {
+                        "dataset": dataset_name,
                         "adjusted_rand_score": -1,
                         "adjusted_mutual_info_score": -1,
                         "purity_score": -1,
                         "silhouette_score": -1,
                         "calinski_harabasz_score": -1,
                         "davies_bouldin_score": -1,
-                        "dataset": dataset_name
                     }
 
                 results.append(scores)

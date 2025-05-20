@@ -1,3 +1,0 @@
-dataset,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,norm_davies_bouldin_score
-kampff_c28,0.22484720546352768,0.2875717114866885,0.9241853962791698,0.08866123090522306,2749.9171905843305,2.7347229678660376,0.26775747722230236
-kampff_c37,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,inf
