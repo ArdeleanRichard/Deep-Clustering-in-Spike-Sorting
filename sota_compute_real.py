@@ -15,6 +15,7 @@ matplotlib.use('Agg')
 from constants import DIR_RESULTS, DIR_FIGURES
 from gs_datasets import load_all_data, load_real_data
 from visualization import scatter_plot
+import time
 
 import torch
 print(torch.cuda.is_available())  # Should return True if GPU is available
@@ -110,11 +111,34 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
 
                 try:
                     transformer = fe_details["estimator"](**fe_params)
-                    X_transformed = transformer.fit_transform(X)
+                    times_fit_transform = []
+
+                    for _ in range(5):
+                        start_time = time.time()
+                        X_transformed = transformer.fit_transform(X)
+                        end_time = time.time()
+
+                        elapsed_time = end_time - start_time
+                        times_fit_transform.append(elapsed_time)
+
+                    average_time_fit_transform = np.mean(times_fit_transform)
+
                     np.savetxt(DIR_RESULTS + f"spaces/{fe_name}/{dataset_name}.csv", X_transformed, delimiter=",")
 
                     estimator = clust_details["estimator"](**clust_params)
-                    y_pred = estimator.fit_predict(X_transformed)
+
+
+                    times_fit_predict = []
+
+                    for _ in range(5):
+                        start_time = time.time()
+                        y_pred = estimator.fit_predict(X_transformed)
+                        end_time = time.time()
+
+                        elapsed_time = end_time - start_time
+                        times_fit_predict.append(elapsed_time)
+
+                    average_time_fit_predict = np.mean(times_fit_predict)
 
                     if len(np.unique(y_pred)) > 1:
                         ari = adjusted_rand_score(y_true, y_pred)
@@ -136,6 +160,8 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                         "silhouette_score": silhouette,
                         "calinski_harabasz_score": calinski_harabasz,
                         "davies_bouldin_score": davies_bouldin,
+                        "average_time_fit_transform": average_time_fit_transform,
+                        "average_time_fit_predict": average_time_fit_predict,
                     }
                     scatter_plot.plot(f'{fe_name} + {clust_name} on {dataset_name}', X_2d, y_pred, marker='o', binary_markers=y_true)
                     plt.savefig(DIR_FIGURES + "svgs/" + f'{dataset_name}_{fe_name}_{clust_name}.svg')

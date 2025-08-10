@@ -7,6 +7,7 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
+import time
 
 from constants import DIR_RESULTS, DIR_FIGURES
 from gs_algos import load_algorithms
