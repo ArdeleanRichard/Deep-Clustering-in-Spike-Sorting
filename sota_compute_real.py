@@ -58,23 +58,23 @@ def load_algorithms_fe():
         #     },
         # },
 
-        "lle": {
-            "estimator": LocallyLinearEmbedding,
-            "param_grid": {
-                "n_components": 2,
-                "n_neighbors": 70,
-                "method": "standard"
-            },
-        },
-
-        "tsne": {
-            "estimator": TSNE,
-            "param_grid": {
-                "n_components": 2,
-                "perplexity": 30,
-                "max_iter": 1000
-            },
-        },
+        # "lle": {
+        #     "estimator": LocallyLinearEmbedding,
+        #     "param_grid": {
+        #         "n_components": 2,
+        #         "n_neighbors": 70,
+        #         "method": "standard"
+        #     },
+        # },
+        #
+        # "tsne": {
+        #     "estimator": TSNE,
+        #     "param_grid": {
+        #         "n_components": 2,
+        #         "perplexity": 30,
+        #         "max_iter": 1000
+        #     },
+        # },
 
         "diffusion_map": {
             "estimator": DiffusionMapWrapper,
@@ -144,35 +144,35 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
 
                 scores = None
 
+                transformer = fe_details["estimator"](**fe_params)
+                times_fit_transform = []
+
+                for _ in range(5):
+                    start_time = time.time()
+                    X_transformed = transformer.fit_transform(X)
+                    end_time = time.time()
+
+                    elapsed_time = end_time - start_time
+                    times_fit_transform.append(elapsed_time)
+
+                average_time_fit_transform = np.mean(times_fit_transform)
+
+                np.savetxt(DIR_RESULTS + f"spaces/{fe_name}/{dataset_name}.csv", X_transformed, delimiter=",")
+
+                estimator = clust_details["estimator"](**clust_params)
+                times_fit_predict = []
+
+                for _ in range(5):
+                    start_time = time.time()
+                    y_pred = estimator.fit_predict(X_transformed)
+                    end_time = time.time()
+
+                    elapsed_time = end_time - start_time
+                    times_fit_predict.append(elapsed_time)
+
+                average_time_fit_predict = np.mean(times_fit_predict)
+
                 try:
-                    transformer = fe_details["estimator"](**fe_params)
-                    times_fit_transform = []
-
-                    for _ in range(5):
-                        start_time = time.time()
-                        X_transformed = transformer.fit_transform(X)
-                        end_time = time.time()
-
-                        elapsed_time = end_time - start_time
-                        times_fit_transform.append(elapsed_time)
-
-                    average_time_fit_transform = np.mean(times_fit_transform)
-
-                    np.savetxt(DIR_RESULTS + f"spaces/{fe_name}/{dataset_name}.csv", X_transformed, delimiter=",")
-
-                    estimator = clust_details["estimator"](**clust_params)
-                    times_fit_predict = []
-
-                    for _ in range(5):
-                        start_time = time.time()
-                        y_pred = estimator.fit_predict(X_transformed)
-                        end_time = time.time()
-
-                        elapsed_time = end_time - start_time
-                        times_fit_predict.append(elapsed_time)
-
-                    average_time_fit_predict = np.mean(times_fit_predict)
-
                     if len(np.unique(y_pred)) > 1:
                         ari = adjusted_rand_score(y_true, y_pred)
                         ami = adjusted_mutual_info_score(y_true, y_pred)
@@ -212,6 +212,8 @@ def perform_grid_search(datasets, featureextraction_algorithms, clustering_algor
                         "silhouette_score": -1,
                         "calinski_harabasz_score": -1,
                         "davies_bouldin_score": -1,
+                        "average_time_fit_transform": average_time_fit_transform,
+                        "average_time_fit_predict": average_time_fit_predict,
                     }
 
                 results.append(scores)
