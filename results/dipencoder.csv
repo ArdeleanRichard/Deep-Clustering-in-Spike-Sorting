@@ -1,3 +1,3 @@
-dataset,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,avg_fit_time,avg_predict_time,norm_davies_bouldin_score
-kampff_c28,-1,-1,-1,-1,-1,-1,-1,-1,inf
-kampff_c37,-1,-1,-1,-1,-1,-1,-1,-1,inf
+dataset,adjusted_rand_score,adjusted_mutual_info_score,purity_score,silhouette_score,calinski_harabasz_score,davies_bouldin_score,avg_fit_predict_time,norm_davies_bouldin_score
+kampff_c28,-1,-1,-1,-1,-1,-1,158.38558268547058,inf
+kampff_c37,-1,-1,-1,-1,-1,-1,207.25233297348024,inf
