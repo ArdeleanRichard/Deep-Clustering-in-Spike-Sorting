@@ -1,6 +1,5 @@
 import pandas as pd
-import glob
-import os
+
 
 def read_data():
     columns = ["dataset", "adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]

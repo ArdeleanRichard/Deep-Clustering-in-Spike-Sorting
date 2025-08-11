@@ -3,8 +3,6 @@ import random
 import numpy as np
 import torch
 from clustpy.deep import ACeDeC, AEC, DCN, DDC, DEC, DeepECT, DipDECK, DipEncoder, DKM, ENRC, IDEC, VaDE, N2D
-from algorithms.autoclustering_pytorch import AutoClustering
-from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, FastICA
 from sklearn.manifold import Isomap, LocallyLinearEmbedding, TSNE

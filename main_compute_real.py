@@ -15,7 +15,7 @@ from datasets import load_all_data, load_real_data
 from visualization import scatter_plot
 
 
-def perform_grid_search(datasets, algorithms):
+def run(datasets, algorithms):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)
 
     for algo_name, algo_details in algorithms.items():
@@ -126,4 +126,4 @@ def perform_grid_search(datasets, algorithms):
 if __name__ == "__main__":
     datasets = load_real_data()
     algorithms = load_algorithms()
-    perform_grid_search(datasets, algorithms)
+    run(datasets, algorithms)

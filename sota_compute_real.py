@@ -20,7 +20,7 @@ print(torch.cuda.device_count())  # Number of GPUs available
 
 
 
-def perform_grid_search(datasets, featureextraction_algorithms, clustering_algorithms, n_repeats=10):
+def run(datasets, featureextraction_algorithms, clustering_algorithms, n_repeats=10):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)
 
     for fe_name, fe_details in featureextraction_algorithms.items():
@@ -114,4 +114,4 @@ if __name__ == "__main__":
     datasets = load_real_data()
     fes = load_algorithms_fe()
     clusts = load_algorithms_clust()
-    perform_grid_search(datasets, fes, clusts)
+    run(datasets, fes, clusts)
