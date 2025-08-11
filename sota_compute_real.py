@@ -1,112 +1,24 @@
-import itertools
 import os
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from sklearn import preprocessing
-from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, FastICA
-from sklearn.manifold import Isomap, LocallyLinearEmbedding, TSNE
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
-from pydiffmap import diffusion_map as dm
-
-
 import matplotlib
 matplotlib.use('Agg')
 from constants import DIR_RESULTS, DIR_FIGURES
-from gs_datasets import load_all_data, load_real_data
+from datasets import load_all_data, load_real_data
 from visualization import scatter_plot
+from algos import load_algorithms_fe, load_algorithms_clust, normalize_dbs
+
 
 import torch
 print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.device_count())  # Number of GPUs available
 
 
-class DiffusionMapWrapper:
-    def __init__(self, n_evecs=2, alpha=0.5, **kwargs):
-        self.model = dm.DiffusionMap.from_sklearn(n_evecs=n_evecs, alpha=alpha, **kwargs)
 
-    def fit_transform(self, X):
-        return self.model.fit_transform(X)
-
-def load_algorithms_fe():
-    algorithms = {
-        # "pca": {
-        #     "estimator": PCA,
-        #     "param_grid": {
-        #         "n_components": 2,
-        #     },
-        # },
-        # "ica": {
-        #     "estimator": FastICA,
-        #     "param_grid": {
-        #         "n_components": 2,
-        #         "fun": "logcosh",
-        #         "max_iter": 200,
-        #         "tol": 1e-3,
-        #     },
-        # },
-        # "isomap": {
-        #     "estimator": Isomap,
-        #     "param_grid": {
-        #         "n_neighbors": 25,
-        #         "n_components": 2,
-        #         "eigen_solver": "arpack",
-        #         "path_method": "D",
-        #         "n_jobs": -1,
-        #     },
-        # },
-
-        "lle": {
-            "estimator": LocallyLinearEmbedding,
-            "param_grid": {
-                "n_components": 2,
-                "n_neighbors": 70,
-                "method": "standard"
-            },
-        },
-
-        "tsne": {
-            "estimator": TSNE,
-            "param_grid": {
-                "n_components": 2,
-                "perplexity": 30,
-                "max_iter": 1000
-            },
-        },
-
-        "diffusion_map": {
-            "estimator": DiffusionMapWrapper,
-            "param_grid": {
-                "n_evecs": 2,
-                "alpha": 0.5,
-                "k": 50,
-            },
-        },
-    }
-
-    return algorithms
-
-def load_algorithms_clust():
-    algorithms = {
-
-        "kmeans": {
-            "estimator": KMeans,
-            "param_grid": {
-                "n_clusters": 2,
-            },
-        },
-
-    }
-
-    return algorithms
-
-
-
-def normalize_dbs(df):
-    df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
-    return df
 
 def perform_grid_search(datasets, featureextraction_algorithms, clustering_algorithms, n_repeats=10):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)

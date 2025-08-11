@@ -7,15 +7,13 @@ from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
+import time
 
 from constants import DIR_RESULTS, DIR_FIGURES
-from gs_algos import load_algorithms
-from gs_datasets import load_all_data, load_real_data
+from algos import load_algorithms, normalize_dbs
+from datasets import load_all_data, load_real_data
 from visualization import scatter_plot
 
-def normalize_dbs(df):
-    df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
-    return df
 
 def perform_grid_search(datasets, algorithms):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)
@@ -63,11 +61,20 @@ def perform_grid_search(datasets, algorithms):
             for params in param_combinations:
                 param_dict = dict(zip(param_names, params))
                 scores_per_repeat = []
+                avg_fit_predict_time = -1
+
+                estimator = algo_details["estimator"](**param_dict)
+                fit_predict_times = []
+
+                for _ in range(5):
+                    start_fit = time.time()
+                    estimator.fit_predict(X)
+                    end_fit = time.time()
+                    fit_predict_times.append(end_fit - start_fit)
+
+                avg_fit_predict_time = np.mean(fit_predict_times)
 
                 try:
-                    estimator = algo_details["estimator"](**param_dict)
-                    y_pred = estimator.fit_predict(X)
-
                     if len(np.unique(y_pred)) > 1:
                         ari = adjusted_rand_score(y_true, y_pred)
                         ami = adjusted_mutual_info_score(y_true, y_pred)
@@ -93,6 +100,7 @@ def perform_grid_search(datasets, algorithms):
                         "silhouette_score": silhouette,
                         "calinski_harabasz_score": calinski_harabasz,
                         "davies_bouldin_score": davies_bouldin,
+                        "avg_fit_predict_time": avg_fit_predict_time,
                     })
                 except Exception as e:
                     print(f"[ERROR] {algo_name}, {params}, {e}")
@@ -104,6 +112,7 @@ def perform_grid_search(datasets, algorithms):
                         "silhouette_score": -1,
                         "calinski_harabasz_score": -1,
                         "davies_bouldin_score": -1,
+                        "avg_fit_predict_time": avg_fit_predict_time,
                     })
 
                 print("RESULTS: ", scores_per_repeat[0])

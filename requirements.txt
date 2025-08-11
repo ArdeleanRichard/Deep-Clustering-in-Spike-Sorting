@@ -4,7 +4,6 @@ seaborn~=0.13.2
 pandas
 scikit-learn
 scipy
-ucimlrepo
 torch
 clustpy
 torchvision

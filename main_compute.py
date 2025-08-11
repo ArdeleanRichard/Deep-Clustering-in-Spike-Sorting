@@ -9,14 +9,10 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_ran
 from sklearn.metrics.cluster import contingency_matrix
 
 from constants import DIR_RESULTS, DIR_FIGURES
-from gs_algos import load_algorithms
-from gs_datasets import load_all_data, load_real_data
+from algos import load_algorithms, normalize_dbs
+from datasets import load_all_data, load_real_data
 from visualization import scatter_plot
 
-
-def normalize_dbs(df):
-    df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
-    return df
 
 def perform_grid_search(datasets, algorithms):
     os.makedirs(DIR_RESULTS + "./grid_search/", exist_ok=True)

@@ -40,7 +40,7 @@ def separate_by_unit(spikes_per_unit, data, length):
     separated_data = []
     sum=0
     for spikes_in_unit in spikes_per_unit:
-        separated_data.append(data[sum*length: (sum+spikes_in_unit)*length])
+        separated_data.append(np.array(data[sum*length: (sum+spikes_in_unit)*length]))
         sum += spikes_in_unit
     return separated_data
 

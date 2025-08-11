@@ -8,13 +8,9 @@ from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_ran
 from sklearn.metrics.cluster import contingency_matrix
 
 from constants import DIR_RESULTS
-from gs_algos import load_algorithms
-from gs_datasets import load_all_data, load_real_data
+from algos import load_algorithms, normalize_dbs
+from datasets import load_all_data, load_real_data
 
-
-def normalize_dbs(df):
-    df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
-    return df
 
 def perform_grid_search(datasets, algorithms, n_repeats=10, add=""):
     for dataset_name, (X, y, y_true) in datasets:
@@ -122,12 +118,7 @@ def perform_grid_search(datasets, algorithms, n_repeats=10, add=""):
 
 
 if __name__ == "__main__":
-    # datasets = load_all_data()
-    # algorithms = load_algorithms()
-    # perform_grid_search(datasets, algorithms)
-
     for i in range(1):
-        # datasets = load_all_data()
         datasets = load_real_data()
         algorithms = load_algorithms()
         perform_grid_search(datasets, algorithms, add=f"_{i}")

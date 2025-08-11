@@ -3,13 +3,12 @@ import os
 import numpy as np
 
 from dataset_parsing.realdata_ssd_1electrode import parse_ssd_file
-from dataset_parsing.realdata_parsing import read_timestamps, read_waveforms, read_event_timestamps, \
-    read_event_codes
+from dataset_parsing.realdata_parsing import read_timestamps, read_waveforms, read_event_timestamps, read_event_codes
 from dataset_parsing.realdata_ssd import find_ssd_files, separate_by_unit, units_by_channel
 
 
 def read_kampff_c37():
-    DATASET_PATH = '../DATA/KAMPFF/c37/units/'
+    DATASET_PATH = '../../Nonlinear-Feature-Extraction-in-SpikeSorting/DATA/KAMPFF/c37/units/'
     # print(os.listdir())
 
     spikes_per_unit, unit_electrode = parse_ssd_file(DATASET_PATH)
@@ -59,7 +58,7 @@ def read_kampff_c37():
 
 
 def read_kampff_c28():
-    DATASET_PATH = '../DATA/KAMPFF/c28/units/'
+    DATASET_PATH = '../../Nonlinear-Feature-Extraction-in-SpikeSorting/DATA/KAMPFF/c28/units/'
     spikes_per_unit, unit_electrode = parse_ssd_file(DATASET_PATH)
     WAVEFORM_LENGTH = 54
     TIMESTAMP_LENGTH = 1
