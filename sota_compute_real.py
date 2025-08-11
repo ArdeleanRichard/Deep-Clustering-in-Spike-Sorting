@@ -6,10 +6,12 @@ from matplotlib import pyplot as plt
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA, FastICA
-from sklearn.manifold import Isomap
+from sklearn.manifold import Isomap, LocallyLinearEmbedding, TSNE
 from sklearn.metrics import silhouette_score, davies_bouldin_score, adjusted_rand_score, adjusted_mutual_info_score, calinski_harabasz_score
 from sklearn.metrics.cluster import contingency_matrix
-from umap import UMAP
+from pydiffmap import diffusion_map as dm
+
+
 import matplotlib
 matplotlib.use('Agg')
 from constants import DIR_RESULTS, DIR_FIGURES
@@ -21,31 +23,65 @@ print(torch.cuda.is_available())  # Should return True if GPU is available
 print(torch.cuda.device_count())  # Number of GPUs available
 
 
+class DiffusionMapWrapper:
+    def __init__(self, n_evecs=2, alpha=0.5, **kwargs):
+        self.model = dm.DiffusionMap.from_sklearn(n_evecs=n_evecs, alpha=alpha, **kwargs)
+
+    def fit_transform(self, X):
+        return self.model.fit_transform(X)
+
 def load_algorithms_fe():
     algorithms = {
-        "pca": {
-            "estimator": PCA,
+        # "pca": {
+        #     "estimator": PCA,
+        #     "param_grid": {
+        #         "n_components": 2,
+        #     },
+        # },
+        # "ica": {
+        #     "estimator": FastICA,
+        #     "param_grid": {
+        #         "n_components": 2,
+        #         "fun": "logcosh",
+        #         "max_iter": 200,
+        #         "tol": 1e-3,
+        #     },
+        # },
+        # "isomap": {
+        #     "estimator": Isomap,
+        #     "param_grid": {
+        #         "n_neighbors": 25,
+        #         "n_components": 2,
+        #         "eigen_solver": "arpack",
+        #         "path_method": "D",
+        #         "n_jobs": -1,
+        #     },
+        # },
+
+        "lle": {
+            "estimator": LocallyLinearEmbedding,
             "param_grid": {
                 "n_components": 2,
+                "n_neighbors": 70,
+                "method": "standard"
             },
         },
-        "ica": {
-            "estimator": FastICA,
+
+        "tsne": {
+            "estimator": TSNE,
             "param_grid": {
                 "n_components": 2,
-                "fun": "logcosh",
-                "max_iter": 200,
-                "tol": 1e-3,
+                "perplexity": 30,
+                "max_iter": 1000
             },
         },
-        "isomap": {
-            "estimator": Isomap,
+
+        "diffusion_map": {
+            "estimator": DiffusionMapWrapper,
             "param_grid": {
-                "n_neighbors": 25,
-                "n_components": 2,
-                "eigen_solver": "arpack",
-                "path_method": "D",
-                "n_jobs": -1,
+                "n_evecs": 2,
+                "alpha": 0.5,
+                "k": 50,
             },
         },
     }

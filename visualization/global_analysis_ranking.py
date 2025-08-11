@@ -48,7 +48,7 @@ def main(methods_dict):
         df_output[metric] = metric_to_ranked_methods[metric]
 
     df_output.to_csv("./paper/tables/borda_rankings.csv", index_label="Method")
-    print("Saved Borda rankings to 'borda_rankings.csv'")
+    print("Saved Borda rankings to './paper/tables/borda_rankings.csv'")
 
 
 if __name__ == "__main__":
@@ -60,23 +60,26 @@ if __name__ == "__main__":
     columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]
     metric_names = ['ARI', 'AMI', 'Purity', 'SS', 'CHS', 'DBS']
 
-    FOLDER = "./results/saved/"
+    FOLDER = "./results/saved_latest/"
     methods_dict = {
-        'PCA':          filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns),
-        'ICA':          filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns),
-        'Isomap':       filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns),
-        "ACeDeC":       filter_columns_and_save(f"./results/acedec.csv", columns=columns),
-        "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
-        "DCN":          filter_columns_and_save(f"./results/dcn.csv", columns=columns),
-        "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
-        "DEC":          filter_columns_and_save(f"./results/dec.csv", columns=columns),
-        "DKM":          filter_columns_and_save(f"./results/dkm.csv", columns=columns),
-        "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
-        "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
-        "DipEncoder":   filter_columns_and_save(f"./results/dipencoder.csv", columns=columns),
-        "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
-        "N2D":          filter_columns_and_save(f"./results/n2d.csv", columns=columns),
-        "VaDE":         filter_columns_and_save(f"./results/vade.csv", columns=columns),
+        'PCA':          filter_columns_and_save(f"{FOLDER}/pca_kmeans.csv", columns=columns),
+        'ICA':          filter_columns_and_save(f"{FOLDER}/ica_kmeans.csv", columns=columns),
+        'Isomap':       filter_columns_and_save(f"{FOLDER}/isomap_kmeans.csv", columns=columns),
+        'LLE':          filter_columns_and_save(f"{FOLDER}/lle_kmeans.csv", columns=columns),
+        't-SNE':        filter_columns_and_save(f"{FOLDER}/tsne_kmeans.csv", columns=columns),
+        'DM':           filter_columns_and_save(f"{FOLDER}/diffusion_map_kmeans.csv", columns=columns),
+        "ACeDeC":       filter_columns_and_save(f"{FOLDER}/acedec.csv", columns=columns),
+        "AEC":          filter_columns_and_save(f"{FOLDER}/aec.csv", columns=columns),
+        "DCN":          filter_columns_and_save(f"{FOLDER}/dcn.csv", columns=columns),
+        "DDC":          filter_columns_and_save(f"{FOLDER}/ddc.csv", columns=columns),
+        "DEC":          filter_columns_and_save(f"{FOLDER}/dec.csv", columns=columns),
+        "DKM":          filter_columns_and_save(f"{FOLDER}/dkm.csv", columns=columns),
+        "DeepECT":      filter_columns_and_save(f"{FOLDER}/deepect.csv", columns=columns),
+        "DipDECK":      filter_columns_and_save(f"{FOLDER}/dipdeck.csv", columns=columns),
+        "DipEncoder":   filter_columns_and_save(f"{FOLDER}/dipencoder.csv", columns=columns),
+        "IDEC":         filter_columns_and_save(f"{FOLDER}/idec.csv", columns=columns),
+        "N2D":          filter_columns_and_save(f"{FOLDER}/n2d.csv", columns=columns),
+        "VaDE":         filter_columns_and_save(f"{FOLDER}/vade.csv", columns=columns),
     }
 
     main(methods_dict)

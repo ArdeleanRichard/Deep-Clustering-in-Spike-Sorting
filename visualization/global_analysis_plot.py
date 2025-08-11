@@ -13,10 +13,11 @@ from visualization.global_analysis_utils import filter_columns_and_save
 
 os.chdir("../")
 
+
 def plot_box(title, data, method_names, conditions):
-    fig, ax1 = plt.subplots(figsize=(10, 6), dpi=600)
+    fig, ax1 = plt.subplots(figsize=(12, 8), dpi=600)  # Increased figure size
     # fig.canvas.manager.set_window_title('A Boxplot Example')
-    fig.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
+    fig.subplots_adjust(left=0.1, right=0.95, top=0.9, bottom=0.35)  # More bottom space for rotated labels
 
     c = 'k'
     black_dict = {  # 'patch_artist': True,
@@ -43,11 +44,16 @@ def plot_box(title, data, method_names, conditions):
         ylabel='Performance',
     )
 
+    # Increase title, axis labels, and tick labels font sizes
+    ax1.set_title(f'{title}', fontsize=36, pad=20)
+    ax1.set_xlabel('Feature Extraction Method', fontsize=15, labelpad=10)
+    ax1.set_ylabel('Performance', fontsize=15, labelpad=10)
+    ax1.tick_params(axis='y', labelsize=14)
+
     # Now fill the boxes with desired colors
     num_boxes = len(data)
 
     for i in range(num_boxes):
-
         box = bp['boxes'][i]
         box_x = []
         box_y = []
@@ -68,7 +74,18 @@ def plot_box(title, data, method_names, conditions):
     # top = 1.1
     # bottom = 0
     # ax1.set_ylim(bottom, top)
-    ax1.set_xticklabels(np.repeat(method_names, len(conditions)), rotation=0, fontsize=8)
+
+    # Solution 1: Rotate x-axis labels to prevent overlap
+    ax1.set_xticklabels(np.repeat(method_names, len(conditions)), rotation=0, fontsize=11, ha='center')
+
+    # Alternative solution (commented out): Use smaller font or abbreviations
+    # ax1.set_xticklabels(np.repeat(method_names, len(conditions)),
+    #                     rotation=90, fontsize=10)
+
+    # Alternative solution 2 (commented out): Use abbreviations if method names are too long
+    # abbreviated_names = [name[:6] + "..." if len(name) > 6 else name for name in method_names]
+    # ax1.set_xticklabels(np.repeat(abbreviated_names, len(conditions)),
+    #                     rotation=0, fontsize=12)
 
     # Due to the Y-axis scale being different across samples, it can be
     # hard to compare differences in medians across the samples. Add upper
@@ -80,11 +97,9 @@ def plot_box(title, data, method_names, conditions):
     #              backgroundcolor=LABEL_COLOR_MAP2[id],
     #              color='black', weight='roman', size='x-small')
 
-    plt.savefig(f"./figures/global/boxplot_{title}_global_analysis.svg")
-    plt.savefig(f"./figures/global/boxplot_{title}_global_analysis.png")
+    plt.savefig(f"./figures/global/boxplot_{title}_global_analysis.svg", bbox_inches='tight')
+    plt.savefig(f"./figures/global/boxplot_{title}_global_analysis.png", bbox_inches='tight')
     plt.close()
-
-
 
 
 def compute_ttest(data, method_names):
@@ -92,7 +107,8 @@ def compute_ttest(data, method_names):
     labels = np.zeros((len(method_names), len(method_names)), dtype=object)
     for m1_id, m1 in enumerate(method_names):
         for m2_id, m2 in enumerate(method_names):
-            result = stats.ttest_ind(data[m1_id], data[m2_id], equal_var=True)[1] * (len(method_names) * (len(method_names) - 1) / 2)
+            result = stats.ttest_ind(data[m1_id], data[m2_id], equal_var=True)[1] * (
+                        len(method_names) * (len(method_names) - 1) / 2)
             if result > 0.05:
                 ttest_matrix[m1_id][m2_id] = -1
                 labels[m1_id][m2_id] = ""
@@ -108,12 +124,37 @@ def compute_ttest(data, method_names):
 
 def plot_ttest_matrix(metric_name, method_names, ttest_matrix, labels):
     df_cm = pd.DataFrame(ttest_matrix, index=method_names, columns=method_names)
-    plt.figure(figsize=(11, 11), dpi=600)
+    plt.figure(figsize=(14, 12), dpi=600)  # Increased figure size for better readability
     pallete = sn.color_palette("magma", as_cmap=True)
-    sn.heatmap(df_cm, annot=False, fmt="", cmap=pallete)
-    sn.heatmap(df_cm, annot=labels, annot_kws={'va': 'top', 'size': 14}, fmt="s", cbar=False, cmap=pallete, linewidths=5e-3, linecolor='gray')
-    plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.svg')
-    plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.png')
+
+    # Create heatmap with larger font sizes
+    ax = sn.heatmap(df_cm, annot=False, fmt="", cmap=pallete)
+    sn.heatmap(df_cm, annot=labels, annot_kws={'va': 'top', 'size': 16},
+               fmt="s", cbar=False, cmap=pallete, linewidths=5e-3, linecolor='gray')
+
+    # Increase font sizes for labels and title
+    ax.set_xlabel(ax.get_xlabel(), fontsize=16, labelpad=10)
+    ax.set_ylabel(ax.get_ylabel(), fontsize=16, labelpad=10)
+
+    # Solution for overlapping axis labels: rotate and adjust
+    ax.tick_params(axis='x', labelsize=12, rotation=0)
+    ax.tick_params(axis='y', labelsize=12, rotation=0)
+
+    # Set title with larger font
+    # ax.set_title(f'T-test Results for {metric_name}', fontsize=18, pad=20)
+
+    # Alternative solutions for long method names (commented out):
+    # Solution 1: Truncate method names
+    # truncated_names = [name[:8] + "..." if len(name) > 8 else name for name in method_names]
+    # ax.set_xticklabels(truncated_names, rotation=45, ha='right', fontsize=10)
+    # ax.set_yticklabels(truncated_names, rotation=0, fontsize=10)
+
+    # Solution 2: Use vertical text for y-axis
+    # ax.tick_params(axis='y', labelrotation=90)
+
+    plt.tight_layout()  # Automatically adjust spacing to prevent overlap
+    plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.svg', bbox_inches='tight')
+    plt.savefig(f'./figures/global/confusion_{metric_name}_global_analysis.png', bbox_inches='tight')
     plt.close()
 
 
@@ -134,30 +175,30 @@ def main(methods_dict):
         plot_box(metric_name, data, method_names, [metric_name])
 
 
-
-
-
 if __name__ == "__main__":
-    columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score", "calinski_harabasz_score", "davies_bouldin_score"]
+    columns = ["adjusted_rand_score", "adjusted_mutual_info_score", "purity_score", "silhouette_score",
+               "calinski_harabasz_score", "davies_bouldin_score"]
     metric_names = ['ARI', 'AMI', 'Purity', 'SS', 'CHS', 'DBS']
 
-
-
+    FOLDER = "./results/saved_latest/"
     methods_dict = {
-        'PCA':          filter_columns_and_save(f"./results/pca_kmeans.csv", columns=columns),
-        'ICA':          filter_columns_and_save(f"./results/ica_kmeans.csv", columns=columns),
-        'Isomap':       filter_columns_and_save(f"./results/isomap_kmeans.csv", columns=columns),
-        "ACeDeC":       filter_columns_and_save(f"./results/acedec.csv", columns=columns),
-        "AEC":          filter_columns_and_save(f"./results/aec.csv", columns=columns),
-        "DCN":          filter_columns_and_save(f"./results/dcn.csv", columns=columns),
-        "DDC":          filter_columns_and_save(f"./results/ddc.csv", columns=columns),
-        "DEC":          filter_columns_and_save(f"./results/dec.csv", columns=columns),
-        "DKM":          filter_columns_and_save(f"./results/dkm.csv", columns=columns),
-        "DeepECT":      filter_columns_and_save(f"./results/deepect.csv", columns=columns),
-        "DipDECK":      filter_columns_and_save(f"./results/dipdeck.csv", columns=columns),
-        "DipEncoder":   filter_columns_and_save(f"./results/dipencoder.csv", columns=columns),
-        "IDEC":         filter_columns_and_save(f"./results/idec.csv", columns=columns),
-        "N2D":          filter_columns_and_save(f"./results/n2d.csv", columns=columns),
-        "VaDE":         filter_columns_and_save(f"./results/vade.csv", columns=columns),
+        'PCA':          filter_columns_and_save(f"{FOLDER}/pca_kmeans.csv", columns=columns),
+        'ICA':          filter_columns_and_save(f"{FOLDER}/ica_kmeans.csv", columns=columns),
+        'Isomap':       filter_columns_and_save(f"{FOLDER}/isomap_kmeans.csv", columns=columns),
+        'LLE':          filter_columns_and_save(f"{FOLDER}/lle_kmeans.csv", columns=columns),
+        't-SNE':        filter_columns_and_save(f"{FOLDER}/tsne_kmeans.csv", columns=columns),
+        'DM':           filter_columns_and_save(f"{FOLDER}/diffusion_map_kmeans.csv", columns=columns),
+        "ACeDeC":       filter_columns_and_save(f"{FOLDER}/acedec.csv", columns=columns),
+        "AEC":          filter_columns_and_save(f"{FOLDER}/aec.csv", columns=columns),
+        "DCN":          filter_columns_and_save(f"{FOLDER}/dcn.csv", columns=columns),
+        "DDC":          filter_columns_and_save(f"{FOLDER}/ddc.csv", columns=columns),
+        "DEC":          filter_columns_and_save(f"{FOLDER}/dec.csv", columns=columns),
+        "DKM":          filter_columns_and_save(f"{FOLDER}/dkm.csv", columns=columns),
+        "Deep\nECT":      filter_columns_and_save(f"{FOLDER}/deepect.csv", columns=columns),
+        "Dip\nDECK":      filter_columns_and_save(f"{FOLDER}/dipdeck.csv", columns=columns),
+        "Dip\nEncoder":   filter_columns_and_save(f"{FOLDER}/dipencoder.csv", columns=columns),
+        "IDEC":         filter_columns_and_save(f"{FOLDER}/idec.csv", columns=columns),
+        "N2D":          filter_columns_and_save(f"{FOLDER}/n2d.csv", columns=columns),
+        "VaDE":         filter_columns_and_save(f"{FOLDER}/vade.csv", columns=columns),
     }
     main(methods_dict)

@@ -8,7 +8,8 @@ import re
 
 
 def create_scatter_grid(plot_map, file_dir, output_path=None, file_format="png",
-                        figsize=(15, 10), dpi=100, row_layout=None, hspace=0.1, title_height_percent=0, y=1.0):
+                        figsize=(15, 10), dpi=100, row_layout=None, hspace=0.1,
+                        title_height_percent=0, y=1.0, crop_margins=None):
     """
     Create a grid of scatter plots from individual files based on a mapping.
 
@@ -30,6 +31,10 @@ def create_scatter_grid(plot_map, file_dir, output_path=None, file_format="png",
     row_layout : list, optional
         Number of plots in each row. Example: [3, 3, 5, 5] for 4 rows with varying columns.
         If None, a uniform grid shape will be assumed.
+    crop_margins : dict, optional
+        Dictionary specifying crop margins as percentages or pixels.
+        Example: {'left': 15, 'right': 10, 'top': 8, 'bottom': 12} (percentages)
+        or {'left': 50, 'right': 40, 'top': 30, 'bottom': 45, 'units': 'pixels'}
 
     Returns:
     --------
@@ -86,13 +91,20 @@ def create_scatter_grid(plot_map, file_dir, output_path=None, file_format="png",
             if file_path:
                 if file_format == "png":
                     img = mpimg.imread(file_path)
+
+                    # Apply title cropping first if specified
                     if title_height_percent != 0:
                         title_height = int(img.shape[0] * (title_height_percent / 100))
                         img = img[title_height:, :, :]
+
+                    # Apply margin cropping if specified
+                    if crop_margins:
+                        img = crop_image_margins(img, crop_margins)
+
                     ax.imshow(img)
 
                 # Add algorithm name as title
-                ax.set_title(title_map[algorithm],  y=y)
+                ax.set_title(title_map[algorithm], y=y)
             else:
                 ax.text(0.5, 0.5, f"Missing: {algorithm}",
                         horizontalalignment='center', verticalalignment='center',
@@ -107,10 +119,53 @@ def create_scatter_grid(plot_map, file_dir, output_path=None, file_format="png",
 
     return fig
 
+
+def crop_image_margins(img, crop_margins):
+    """
+    Crop margins from an image based on specified crop parameters.
+
+    Parameters:
+    -----------
+    img : numpy.ndarray
+        The input image array
+    crop_margins : dict
+        Dictionary specifying crop margins. Can contain:
+        - 'left', 'right', 'top', 'bottom': margin sizes
+        - 'units': 'percent' (default) or 'pixels'
+
+    Returns:
+    --------
+    numpy.ndarray
+        The cropped image
+    """
+    height, width = img.shape[:2]
+    units = crop_margins.get('units', 'percent')
+
+    # Calculate crop values in pixels
+    if units == 'percent':
+        left = int(width * crop_margins.get('left', 0) / 100)
+        right = int(width * crop_margins.get('right', 0) / 100)
+        top = int(height * crop_margins.get('top', 0) / 100)
+        bottom = int(height * crop_margins.get('bottom', 0) / 100)
+    else:  # pixels
+        left = crop_margins.get('left', 0)
+        right = crop_margins.get('right', 0)
+        top = crop_margins.get('top', 0)
+        bottom = crop_margins.get('bottom', 0)
+
+    # Apply cropping
+    cropped_img = img[top:height - bottom, left:width - right]
+
+    return cropped_img
+
+
 title_map = {
     "pca": "PCA",
     "ica": "ICA",
     "isomap": "Isomap",
+    "lle": "LLE",
+    "tsne": "t-SNE",
+    "diffusion_map": "DM",
     "acedec": "ACeDeC",
     "aec": "AEC",
     "dcn": "DCN",
@@ -123,6 +178,7 @@ title_map = {
     "idec": "IDEC",
     "n2d": "N2D",
     "vade": "VaDE",
+    "gt": "Ground truth",
 
     "ARI": "ARI",
     "AMI": "AMI",
@@ -132,31 +188,43 @@ title_map = {
     "DBS": "DBS",
 }
 
-def main_scatter_plots(scatter_folders=["fig3_Sim53", "fig4_Sim81", "fig5_Sim67", "fig6_Sim86"]):
+
+def main_scatter_plots(scatter_folders=["fig3_Sim20"]):
     # Define the mapping of positions to algorithms
-    # This is just an example - you'll need to customize this
     position_to_algorithm = {
         (0, 0): "pca", (0, 1): "ica", (0, 2): "isomap",
-        (1, 0): "acedec", (1, 1): "aec", (1, 2): "dcn",
-        (2, 0): "ddc", (2, 1): "dec", (2, 2): "deepect",
-        (3, 0): "dipdeck", (3, 1): "dipencoder", (3, 2): "dkm",
-        (4, 0): "idec", (4, 1): "n2d", (4, 2): "vade"
+        (1, 0): "lle", (1, 1): "tsne", (1, 2): "diffusion_map",
+        # (0, 1): "gt",
+        (2, 0): "acedec",   (2, 1): "aec",          (2, 2): "dcn",
+        (3, 0): "ddc",      (3, 1): "dec",          (3, 2): "deepect",
+        (4, 0): "dipdeck",  (4, 1): "dipencoder",   (4, 2): "dkm",
+        (5, 0): "idec",     (5, 1): "n2d",          (5, 2): "vade"
+    }
+
+    # Define crop margins to remove axes and zoom in
+    # Based on typical matplotlib scatter plot margins
+    crop_margins = {
+        'left': 12,  # Remove left axis area (percentage)
+        'right': 5,  # Remove right margin
+        'top': 0,  # Remove top margin
+        'bottom': 10,  # Remove bottom axis area
+        'units': 'percent'
     }
 
     # Directory where your scatter plot files are located
     fig_folder = "../paper/figures/"
     for scatter_plot_folder in scatter_folders:
-
-        # Create the grid
+        # Create the grid with cropping
         fig = create_scatter_grid(
             plot_map=position_to_algorithm,
             file_dir=fig_folder + scatter_plot_folder,
-            output_path=fig_folder + f"{scatter_plot_folder}.png",
-            file_format="png",  # or "svg"
+            output_path=fig_folder + f"{scatter_plot_folder}_cropped.png",
+            file_format="png",
             figsize=(8, 10),
             dpi=600,
-            hspace=0.1,
-            title_height_percent=12
+            hspace=0.25,
+            title_height_percent=12,
+            crop_margins=crop_margins
         )
 
         plt.close()
@@ -164,7 +232,6 @@ def main_scatter_plots(scatter_folders=["fig3_Sim53", "fig4_Sim81", "fig5_Sim67"
 
 def main_metrics():
     # Define the mapping of positions to algorithms
-    # This is just an example - you'll need to customize this
     position_to_algorithm = {
         (0, 0): "ARI", (0, 1): "AMI",
         (1, 0): "Purity", (1, 1): "SS",
@@ -174,37 +241,35 @@ def main_metrics():
     # Directory where your scatter plot files are located
     fig_folder = "../paper/figures/"
 
+    # for scatter_plot_folder in ["fig7_box"]:
+    #     # Create the grid
+    #     fig = create_scatter_grid(
+    #         plot_map=position_to_algorithm,
+    #         file_dir=fig_folder + scatter_plot_folder,
+    #         output_path=fig_folder + f"{scatter_plot_folder}_cropped.png",
+    #         file_format="png",
+    #         figsize=(10, 8),
+    #         dpi=600,
+    #         hspace=0.01,
+    #         title_height_percent=10,
+    #         y=1,
+    #         crop_margins=None
+    #     )
+    #
+    #     plt.close()
 
-    for scatter_plot_folder in ["fig7_box"] :
-
+    for scatter_plot_folder in ["fig8_ttest"]:
         # Create the grid
         fig = create_scatter_grid(
             plot_map=position_to_algorithm,
             file_dir=fig_folder + scatter_plot_folder,
-            output_path=fig_folder + f"{scatter_plot_folder}.png",
-            file_format="png",  # or "svg"
-            figsize=(10, 8),
-            dpi=600,
-            hspace=0.01,
-            title_height_percent=10,
-            y=1,
-        )
-
-        plt.close()
-
-
-    for scatter_plot_folder in ["fig8_ttest"] :
-
-        # Create the grid
-        fig = create_scatter_grid(
-            plot_map=position_to_algorithm,
-            file_dir=fig_folder + scatter_plot_folder,
-            output_path=fig_folder + f"{scatter_plot_folder}.png",
-            file_format="png",  # or "svg"
+            output_path=fig_folder + f"{scatter_plot_folder}_cropped.png",
+            file_format="png",
             figsize=(6, 10),
             dpi=600,
             hspace=0.01,
-            y=0.9,
+            y=1.1,
+            crop_margins=None
         )
 
         plt.close()
@@ -212,6 +277,6 @@ def main_metrics():
 
 # Example usage:
 if __name__ == "__main__":
-    # main_scatter_plots(scatter_folders=["fig3_Sim53", "fig4_Sim81", "fig5_Sim67", "fig6_Sim86"])
+    # main_scatter_plots(scatter_folders=["fig3_Sim20"])
     # main_metrics()
     main_scatter_plots(scatter_folders=["fig9_kampff_c28", "fig10_kampff_c37"])

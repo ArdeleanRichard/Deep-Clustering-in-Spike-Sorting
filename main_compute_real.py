@@ -13,7 +13,6 @@ from gs_algos import load_algorithms
 from gs_datasets import load_all_data, load_real_data
 from visualization import scatter_plot
 
-
 def normalize_dbs(df):
     df['norm_davies_bouldin_score'] = 1 / (1 + df['davies_bouldin_score'])
     return df
