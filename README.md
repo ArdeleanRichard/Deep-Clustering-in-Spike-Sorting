@@ -22,10 +22,15 @@ This project provides a large-scale **benchmark of 12 deep clustering algorithms
 ## Datasets
 
 ### Synthetic Spike Waveforms (Pedreira et al., 2012)
-- **Description**: 95 single-channel synthetic datasets (simulations) were analyzed. These were created based on "in vivo" recordings from a monkey brain.
-- **Parameters**: Performance was analyzed across datasets with varying **cluster counts (2-20)** and complexity.
-- **Cluster Composition**: Each dataset contains a single **multi-unit cluster** and the rest are single-unit clusters.
+- **Description**: 95 single-channel synthetic datasets derived from real monkey recordings.  
+- **Characteristics**: 2–20 clusters per dataset, ~9,300 spikes on average, including multi-unit clusters.  
+- **Usage**: Benchmarking feature extraction across diverse conditions.  
+- **Access**: Publicly available.  
 
+### Real Datasets (spe-1, Marques-Smith et al., 2018/2020)
+- **Description**: Patch-clamp + 384-channel CMOS extracellular recordings in rat cortex.  
+- **Ground Truth**: Dual intracellular/extracellular data for 21 neurons.  
+- **Datasets Used**: c28 and c37.  
 ---
 
 ## Methods Benchmarked
@@ -51,7 +56,6 @@ Performance was evaluated using six clustering metrics: **Adjusted Rand Index (A
 - **Top Performers**:
     - **DDC** excelled on datasets with low to medium cluster counts.
     - **DEC, IDEC, and VaDE** were the top performers for datasets with a medium to high number of clusters.
-- **Multi-Unit Cluster**: The top-performing deep clustering methods were capable of correctly identifying the multi-unit cluster in the synthetic data.
 
 ---
 
